@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import Container from './Container';
-
+import * as Petfinder from './PetFinder';
 import './App.css';
 
 class App extends Component {
     render() {
-        return (
-            <div className="App">
-                <Container />
-            </div>
-        );
+        return <div className="App">{/*<Container />*/}</div>;
     }
 }
 
