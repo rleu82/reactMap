@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 class FindDog extends Component {
     render() {
         return (
-            <div class="control">
-                <div class="select">
+            <div className="control">
+                <div className="select">
                     <select>
                         <option value="default" disabled>
                             Select Area
