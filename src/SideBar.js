@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { slide as Menu } from 'react-burger-menu';
-import './css/bulma.css';
 import FindDog from './FindDog';
 import ListDogs from './ListDogs';
 
@@ -9,7 +8,7 @@ class SideBar extends Component {
         return (
             <Menu>
                 <h2 className="title is-4 has-text-white">Adopt A Dog</h2>
-                <FindDog />
+                <FindDog updateZip={this.props.updateZip} />
                 <ListDogs dogs={this.props.dogs} />
             </Menu>
         );

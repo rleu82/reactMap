@@ -29,6 +29,7 @@ body,
 .bm-cross-button {
     height: 24px;
     width: 24px;
+    right: 20px !important;
 }
 
 /* Color/shape of close button cross */
@@ -44,7 +45,7 @@ body,
 }
 /* Adjust menu width */
 .bm-menu-wrap {
-    width: 400px !important;
+    width: 450px !important;
 }
 /* Morph shape necessary with bubble or elastic */
 .bm-morph-shape {

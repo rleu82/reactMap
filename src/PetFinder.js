@@ -9,5 +9,4 @@ export const getDogs = zip =>
         { jsonpCallbackFunction: 'callback' }
     )
         .then(res => res.json())
-        .then(data => data.petfinder.pets.pet)
-        .catch(err => console.log(err));
+        .then(data => data.petfinder.pets.pet);

@@ -5,7 +5,7 @@ class FindDog extends Component {
         return (
             <div className="control">
                 <div className="select">
-                    <select>
+                    <select onChange={e => this.props.updateZip(e.target.value)}>
                         <option value="default" disabled>
                             Select Area
                         </option>
