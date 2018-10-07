@@ -66,5 +66,6 @@ body,
 /* Styling of overlay */
 .bm-overlay {
     width: 400px !important;
+    position: relative !important;
     transform: translate3d(0, 0, 0) !important;
 }
