@@ -9,13 +9,18 @@ class App extends Component {
     state = {
         dogs: [],
         shelters: [],
-        searchZip: '91740'
+        searchZip: 91740,
+        defaultCenter: { lat: 34.106676, lng: -117.806726 }
     };
     componentDidMount() {
-        this.findShelters(91740);
+        this.findShelters(this.state.searchZip);
     }
 
-    findDogs = zip => {
+    componentDidUpdate() {
+        console.log(this.state.shelters);
+    }
+
+    /*  findDogs = zip => {
         fetchJsonp(
             `http://api.petfinder.com/pet.find?format=json&key=0486cb8d84957db4db8abbb194319fdf&animal=dog&location=${zip}&callback=callback`,
             { jsonpCallbackFunction: 'callback' }
@@ -26,9 +31,10 @@ class App extends Component {
             })
             .catch(ex => console.log(ex));
     };
+    */
 
     findShelters = zip => {
-        fetchJsonp(
+        return fetchJsonp(
             `http://api.petfinder.com/shelter.find?format=json&key=0486cb8d84957db4db8abbb194319fdf&location=${zip}&callback=callback`,
             { jsonpCallbackFunction: 'callback' }
         )
@@ -40,15 +46,19 @@ class App extends Component {
     };
 
     updateZip = zip => {
-        this.setState({ searchZip: zip });
+        this.findShelters(zip).then(() => {
+            this.setState({
+                defaultCenter: { lat: this.state.shelters[0].latitude.$t, lng: this.state.shelters[0].longitude.$t }
+            });
+            console.log(this.state.defaultCenter.lat);
+        });
     };
 
     render() {
-        console.log(this.state.shelters);
         return (
             <div className="App">
-                <SideBar dogs={this.state.dogs} updateZip={this.updateZip} />
-                <Container shelters={this.state.shelters} />
+                <SideBar shelters={this.state.shelters} updateZip={this.updateZip} />
+                <Container shelters={this.state.shelters} defaultCenter={this.state.defaultCenter} />
             </div>
         );
     }

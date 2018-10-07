@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
 import { slide as Menu } from 'react-burger-menu';
-import FindDog from './FindDog';
-import ListDogs from './ListDogs';
+import FindShelters from './FindShelters';
+import ListShelters from './ListShelters';
 
 class SideBar extends Component {
     render() {
         return (
             <Menu>
-                <h2 className="title is-4 has-text-white">Adopt A Dog</h2>
-                <FindDog updateZip={this.props.updateZip} />
-                <ListDogs dogs={this.props.dogs} />
+                <div className="media-left">
+                    <figure className="image is-64x64">
+                        <img
+                            src="http://www.free-icons-download.net/images/welsh-dwarf-dog-icon-87624.png"
+                            alt="Welsh Corgis"
+                        />
+                    </figure>
+                </div>
+                <h2 className="title is-4 has-text-white">Find A Shelter</h2>
+                <FindShelters updateZip={this.props.updateZip} />
+                <ListShelters shelters={this.props.shelters} />
             </Menu>
         );
     }

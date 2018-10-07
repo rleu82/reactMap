@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class FindDog extends Component {
+class FindShelters extends Component {
     render() {
         return (
             <div className="control">
@@ -18,4 +18,4 @@ class FindDog extends Component {
         );
     }
 }
-export default FindDog;
+export default FindShelters;
