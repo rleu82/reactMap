@@ -5,11 +5,9 @@ class Container extends Component {
     state = {
         showInfoWindow: false,
         clickedMarker: {},
-        selectedShelter: {}
+        selectedShelter: {},
+        currentLocation: ''
     };
-    componentDidUpdate() {
-        this.moveCenter;
-    }
     // Clicking on marker sets props and activates(true) info window for selected shelter
     onMarkerClick = (props, marker, e) =>
         this.setState({
@@ -27,18 +25,8 @@ class Container extends Component {
             });
         }
     };
-
-    moveCenter() {
-        const map = this.map;
-        const curr = this.props.defaultCenter;
-
-        const google = this.props.google;
-        const maps = google.maps;
-
-        if (map) {
-            let center = new maps.LatLng(curr.lat, curr.lng);
-            map.panTo(center);
-        }
+    recenter() {
+        this.map.panTo(this.props.defaultCenter);
     }
 
     render() {
@@ -46,7 +34,11 @@ class Container extends Component {
             <Map
                 onClick={this.onMapClicked}
                 google={this.props.google}
-                zoom={12}
+                zoom={11}
+                center={{
+                    lat: this.props.defaultCenter.lat,
+                    lng: this.props.defaultCenter.lng
+                }}
                 initialCenter={{
                     lat: this.props.defaultCenter.lat,
                     lng: this.props.defaultCenter.lng
