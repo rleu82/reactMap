@@ -4,8 +4,8 @@ class ListShelters extends Component {
     // When Shelter is selected from SideBar, trigger event to click associated marker to popup infowindow
     clickedShelter = shelterID => {
         const selectedShelter = this.props.mapMarkers.find(mapMarker => mapMarker.marker.id === shelterID);
-        window.google.maps.event.trigger('click', selectedShelter);
-        console.log(selectedShelter.marker.id);
+        window.google.maps.Event.trigger('click', selectedShelter);
+        console.log(window.google);
     };
     render() {
         const listStyle = { margin: '10px 0' };
