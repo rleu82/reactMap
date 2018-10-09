@@ -17,7 +17,7 @@ class SideBar extends Component {
                 </div>
                 <h2 className="title is-4 has-text-white">Find A Shelter</h2>
                 <FindShelters updateZip={this.props.updateZip} />
-                <ListShelters shelters={this.props.shelters} />
+                <ListShelters shelters={this.props.shelters} mapMarkers={this.props.mapMarkers} />
             </Menu>
         );
     }
