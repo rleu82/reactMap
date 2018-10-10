@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 
 class ListShelters extends Component {
-    // When Shelter is selected from SideBar, trigger event to click associated marker to popup infowindow
-    clickedShelter = shelterID => {
-        const selectedShelter = this.props.mapMarkers.find(mapMarker => mapMarker.marker.id === shelterID);
-        window.google.maps.Event.trigger('click', selectedShelter);
-        console.log(window.google);
-    };
     render() {
         const listStyle = { margin: '10px 0' };
         return (
@@ -17,7 +11,10 @@ class ListShelters extends Component {
                             <li
                                 tabIndex="0"
                                 onFocus={() => {
-                                    this.clickedShelter(shelter.id.$t);
+                                    this.props.onListClicked(shelter);
+                                }}
+                                onClick={() => {
+                                    this.props.onListClicked(shelter);
                                 }}
                                 style={listStyle}
                                 key={shelter.id.$t}

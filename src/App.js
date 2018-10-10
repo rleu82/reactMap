@@ -3,56 +3,59 @@ import fetchJsonp from 'fetch-jsonp';
 import Container from './Container';
 import './css/App.css';
 import './css/bulma.css';
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
-import SideBar from './SideBar';
+
 class App extends Component {
     state = {
-        dogs: [],
         shelters: [],
+        mapMakers: [],
         searchZip: 91740,
-        defaultCenter: { lat: 34.106676, lng: -117.806726 },
-        mapMarkers: []
+        defaultCenter: { lat: 34.106676, lng: -117.806726 }
     };
+
     componentDidMount() {
-        this.findShelters(this.state.searchZip).then(() => {
-            console.log(this.state.mapMarkers);
-        });
+        this.updateZip(this.state.searchZip);
     }
 
-    componentDidUpdate() {}
     // API call to grab shelter info from api.petfinder.com
     findShelters = zip => {
         return fetchJsonp(
-            `http://api.petfinder.com/shelter.find?format=json&key=0486cb8d84957db4db8abbb194319fdf&location=${zip}&callback=callback`,
+            `http://api.petfinder.com/shelter.find?format=json&key=0486cb8d84957db4db8abbb194319fdf&count=25&location=${zip}&callback=callback`,
             { jsonpCallbackFunction: 'callback' }
         )
             .then(res => res.json())
             .then(data => {
                 this.setState({ shelters: data.petfinder.shelters.shelter });
             })
-            .catch(ex => console.log(ex));
+            .catch(err => console.log(err));
     };
 
-    // Clear mapMarkers array and updates zipcode and find shelters of new zip which triggers a repopulate of mapMarkers array
     updateZip = zip => {
-        this.setState({ mapMarkers: [] });
-        this.findShelters(zip);
-        console.log(this.state.mapMarkers);
+        this.findShelters(zip).then(() => {
+            this.updateMapMakers();
+        });
     };
 
-    // Add markers to state
-    onMarkerMounted = marker => {
-        this.state.mapMarkers.push(marker);
+    updateMapMakers = () => {
+        const newMapMakers = this.state.shelters.map(shelter => {
+            return {
+                id: shelter.id.$t,
+                name: shelter.name.$t,
+                title: shelter.name.$t,
+                position: { lat: shelter.latitude.$t, lng: shelter.longitude.$t }
+            };
+        });
+        this.setState({ mapMakers: newMapMakers });
+        console.log(this.state.mapMakers);
     };
 
     render() {
         return (
             <div className="App">
-                <SideBar mapMarkers={this.state.mapMarkers} shelters={this.state.shelters} updateZip={this.updateZip} />
                 <Container
                     shelters={this.state.shelters}
                     defaultCenter={this.state.defaultCenter}
-                    onMarkerMounted={this.onMarkerMounted}
+                    updateZip={this.updateZip}
+                    findShelters={this.findShelters}
                 />
             </div>
         );
