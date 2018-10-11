@@ -34,11 +34,10 @@ class Container extends Component {
     }
 
     onListClicked = marker => {
-        const selShelter = Marker.find(mapMarker => mapMarker.id === marker.id);
+        const selShelter = this.props.mapMarkers.find(mapMarker => mapMarker.id === marker.id);
         console.log(selShelter);
-        /*window.google.maps.event.trigger(marker, 'click', {
-            latLng: new google.maps.LatLng(selShelter.position.lat, selShelter.position.lng)
-        });*/
+        window.google.maps.event.trigger(marker, 'click');
+        this.onMarkerClick(selShelter);
         console.log(selShelter.id);
     };
 
@@ -62,7 +61,7 @@ class Container extends Component {
             <div>
                 <Map
                     onClick={this.onMapClicked}
-                    google={this.props.google}
+                    google={window.google}
                     zoom={11}
                     initialCenter={{
                         lat: this.props.defaultCenter.lat,
