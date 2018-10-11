@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 import SideBar from './SideBar';
+
 class Container extends Component {
     state = {
-        mapMarkers: [],
         showInfoWindow: false,
         clickedMarker: {},
         selectedShelter: {},
-        currentLocation: ''
+        currentLocation: '',
+        markersToDisplay: ''
     };
+    componentDidMount() {}
+
     // Clicking on marker sets props and activates(true) info window for selected shelter
     onMarkerClick = (props, marker, e) =>
         this.setState({
@@ -30,9 +33,13 @@ class Container extends Component {
         this.map.panTo(this.props.defaultCenter);
     }
 
-    onListClicked = shelter => {
-        const selShelter = this.state.mapMarkers.find(mapMarker => mapMarker.props.id === shelter.id.$t);
+    onListClicked = marker => {
+        const selShelter = Marker.find(mapMarker => mapMarker.id === marker.id);
         console.log(selShelter);
+        /*window.google.maps.event.trigger(marker, 'click', {
+            latLng: new google.maps.LatLng(selShelter.position.lat, selShelter.position.lng)
+        });*/
+        console.log(selShelter.id);
     };
 
     onMarkerUpdated = markerToUpdate => {
@@ -42,12 +49,12 @@ class Container extends Component {
         });
     };
 
-    onMarkerMounted = marker => {
+    /*onMarkerMounted = marker => {
         this.setState(prevState => ({
             mapMarkers: [...prevState.mapMarkers, marker]
         }));
-        console.log(this.state.mapMarkers);
-    };
+        console.log(this.props.mapMarkers);
+    };*/
     // Clear mapMarkers array and updates zipcode and find shelters of new zip which triggers a repopulate of mapMarkers array
 
     render() {
@@ -62,19 +69,22 @@ class Container extends Component {
                         lng: this.props.defaultCenter.lng
                     }}
                 >
-                    {this.props.shelters.map(shelter => {
+                    {this.props.mapMarkers.map(shelterMarker => {
                         return (
                             <Marker
                                 onClick={this.onMarkerClick}
-                                id={shelter.id.$t}
-                                name={shelter.name.$t}
-                                key={shelter.id.$t}
-                                title={shelter.name.$t}
-                                position={{ lat: shelter.latitude.$t, lng: shelter.longitude.$t }}
+                                id={shelterMarker.id}
+                                name={shelterMarker.name}
+                                key={shelterMarker.id}
+                                title={shelterMarker.title}
+                                position={{
+                                    lat: shelterMarker.position.lat,
+                                    lng: shelterMarker.position.lng
+                                }}
                             />
                         );
                     })}
-
+                    <Marker id="hello" position={{ lat: 33.8353, lng: -117.9136 }} title="hello" />
                     <InfoWindow marker={this.state.clickedMarker} visible={this.state.showInfoWindow}>
                         <div>
                             <h1>{this.state.selectedShelter.name}</h1>
@@ -85,7 +95,7 @@ class Container extends Component {
                     shelters={this.props.shelters}
                     updateZip={this.props.updateZip}
                     onListClicked={this.onListClicked}
-                    mapMarkers={this.state.mapMarkers}
+                    mapMarkers={this.props.mapMarkers}
                 />
             </div>
         );

@@ -6,37 +6,31 @@ class ListShelters extends Component {
         return (
             <div className="level-left">
                 <ul>
-                    {this.props.shelters.map(shelter => {
+                    {this.props.mapMarkers.map(marker => {
                         return (
                             <li
                                 tabIndex="0"
                                 onFocus={() => {
-                                    this.props.onListClicked(shelter);
+                                    this.props.onListClicked(marker);
                                 }}
                                 onClick={() => {
-                                    this.props.onListClicked(shelter);
+                                    this.props.onListClicked(marker);
                                 }}
                                 style={listStyle}
-                                key={shelter.id.$t}
+                                key={marker.id}
                             >
                                 <div className="box">
                                     <article className="media">
                                         <div className="media-content">
                                             <div className="content">
                                                 <p className="is-size-6">
-                                                    <strong>
-                                                        {shelter.name.$t ? shelter.name.$t : 'Not Available'}
-                                                    </strong>
+                                                    <strong>{marker.name}</strong>
                                                     <br />
-                                                    <small>
-                                                        Phone: {shelter.phone.$t ? shelter.phone.$t : 'Not Available'}
-                                                    </small>
+                                                    <small>Phone: {marker.phone}</small>
                                                     <br />
                                                     <small className="is-size-7">
                                                         Email: {/* Check if email is there and length > 1 */}
-                                                        {shelter.email.$t && shelter.email.$t.length > 1
-                                                            ? shelter.email.$t
-                                                            : 'Not Available'}
+                                                        {marker.email}
                                                     </small>
                                                 </p>
                                             </div>

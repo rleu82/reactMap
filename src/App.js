@@ -7,7 +7,7 @@ import './css/bulma.css';
 class App extends Component {
     state = {
         shelters: [],
-        mapMakers: [],
+        mapMarkers: [],
         searchZip: 91740,
         defaultCenter: { lat: 34.106676, lng: -117.806726 }
     };
@@ -31,27 +31,32 @@ class App extends Component {
 
     updateZip = zip => {
         this.findShelters(zip).then(() => {
-            this.updateMapMakers();
+            this.updateMapMarkers();
         });
     };
 
-    updateMapMakers = () => {
-        const newMapMakers = this.state.shelters.map(shelter => {
+    updateMapMarkers = () => {
+        const newMapMarkers = this.state.shelters.map(shelter => {
             return {
                 id: shelter.id.$t,
                 name: shelter.name.$t,
                 title: shelter.name.$t,
+                city: shelter.city.$t,
+                phone: shelter.phone.$t && shelter.phone.$t.length > 1 ? shelter.phone.$t : 'Not Available',
+                email: shelter.email.$t && shelter.email.$t.length > 1 ? shelter.email.$t : 'Not Available',
                 position: { lat: shelter.latitude.$t, lng: shelter.longitude.$t }
             };
         });
-        this.setState({ mapMakers: newMapMakers });
-        console.log(this.state.mapMakers);
+        this.setState({ mapMarkers: newMapMarkers });
+        console.log(this.state.shelters);
+        console.log(this.state.mapMarkers);
     };
 
     render() {
         return (
             <div className="App">
                 <Container
+                    mapMarkers={this.state.mapMarkers}
                     shelters={this.state.shelters}
                     defaultCenter={this.state.defaultCenter}
                     updateZip={this.updateZip}
