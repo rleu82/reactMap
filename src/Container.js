@@ -8,7 +8,8 @@ class Container extends Component {
         clickedMarker: {},
         selectedShelter: {},
         currentLocation: '',
-        markersToDisplay: ''
+        markersToDisplay: '',
+        windowPosition: {}
     };
     componentDidMount() {}
 
@@ -36,8 +37,10 @@ class Container extends Component {
     onListClicked = marker => {
         const selShelter = this.props.mapMarkers.find(mapMarker => mapMarker.id === marker.id);
         console.log(selShelter);
+        this.setState({ windowPosition: selShelter.position });
         window.google.maps.event.trigger(marker, 'click');
         this.onMarkerClick(selShelter);
+
         console.log(selShelter.id);
     };
 
@@ -84,7 +87,11 @@ class Container extends Component {
                         );
                     })}
                     <Marker id="hello" position={{ lat: 33.8353, lng: -117.9136 }} title="hello" />
-                    <InfoWindow marker={this.state.clickedMarker} visible={this.state.showInfoWindow}>
+                    <InfoWindow
+                        position={this.state.windowPosition}
+                        marker={this.state.clickedMarker}
+                        visible={this.state.showInfoWindow}
+                    >
                         <div>
                             <h1>{this.state.selectedShelter.name}</h1>
                         </div>
