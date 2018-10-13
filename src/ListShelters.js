@@ -17,7 +17,7 @@ class ListShelters extends Component {
                                     this.props.onListClicked(marker);
                                 }}
                                 style={listStyle}
-                                key={marker.id}
+                                key={marker.name}
                             >
                                 <div className="box">
                                     <article className="media">

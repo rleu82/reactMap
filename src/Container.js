@@ -8,7 +8,7 @@ class Container extends Component {
         clickedMarker: {},
         selectedShelter: {},
         currentLocation: '',
-        markersToDisplay: '',
+        newMapMarkers: [],
         windowPosition: {}
     };
     componentDidMount() {}
@@ -37,8 +37,9 @@ class Container extends Component {
     onListClicked = marker => {
         const selShelter = this.props.mapMarkers.find(mapMarker => mapMarker.id === marker.id);
         console.log(selShelter);
-        this.setState({ windowPosition: selShelter.position });
-        window.google.maps.event.trigger(marker, 'click');
+
+        this.setState({ windowPosition: { lat: selShelter.position.lat, lng: selShelter.position.lng } });
+        window.google.maps.event.trigger(selShelter, 'click');
         this.onMarkerClick(selShelter);
 
         console.log(selShelter.id);
@@ -51,17 +52,15 @@ class Container extends Component {
         });
     };
 
-    /*onMarkerMounted = marker => {
+    onMarkerMounted = element => {
         this.setState(prevState => ({
-            mapMarkers: [...prevState.mapMarkers, marker]
+            newMapMarkers: [...prevState.newMapMarkers, element.marker]
         }));
-        console.log(this.props.mapMarkers);
-    };*/
-    // Clear mapMarkers array and updates zipcode and find shelters of new zip which triggers a repopulate of mapMarkers array
+    };
 
     render() {
         return (
-            <div>
+            <div ref="map">
                 <Map
                     onClick={this.onMapClicked}
                     google={window.google}
@@ -74,8 +73,9 @@ class Container extends Component {
                     {this.props.mapMarkers.map(shelterMarker => {
                         return (
                             <Marker
+                                {...this.props}
+                                ref={this.onMarkerMounted}
                                 onClick={this.onMarkerClick}
-                                id={shelterMarker.id}
                                 name={shelterMarker.name}
                                 key={shelterMarker.id}
                                 title={shelterMarker.title}
@@ -86,8 +86,9 @@ class Container extends Component {
                             />
                         );
                     })}
-                    <Marker id="hello" position={{ lat: 33.8353, lng: -117.9136 }} title="hello" />
+                    {console.log(this.state.newMapMarkers)}
                     <InfoWindow
+                        pixelOffset={new window.google.maps.Size(0, -42)}
                         position={this.state.windowPosition}
                         marker={this.state.clickedMarker}
                         visible={this.state.showInfoWindow}
@@ -107,7 +108,8 @@ class Container extends Component {
         );
     }
 }
-
+const mapContainer = props => <div id="map" />;
 export default GoogleApiWrapper({
-    apiKey: 'AIzaSyB6aDkp2IyLQVhLJuiOq0lxyrJAaNyhqkA'
+    apiKey: 'AIzaSyB6aDkp2IyLQVhLJuiOq0lxyrJAaNyhqkA',
+    LoadingContainer: mapContainer
 })(Container);

@@ -44,7 +44,7 @@ class App extends Component {
                 city: shelter.city.$t,
                 phone: shelter.phone.$t && shelter.phone.$t.length > 1 ? shelter.phone.$t : 'Not Available',
                 email: shelter.email.$t && shelter.email.$t.length > 1 ? shelter.email.$t : 'Not Available',
-                position: { lat: shelter.latitude.$t, lng: shelter.longitude.$t }
+                position: { lat: parseFloat(shelter.latitude.$t), lng: parseFloat(shelter.longitude.$t) }
             };
         });
         this.setState({ mapMarkers: newMapMarkers });
