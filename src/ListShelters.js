@@ -13,11 +13,9 @@ class ListShelters extends Component {
                                 onFocus={() => {
                                     this.props.onListClicked(marker);
                                 }}
-                                onClick={() => {
-                                    this.props.onListClicked(marker);
-                                }}
+                                onClick={() => curMarker => this.props.onListClicked(marker)}
                                 style={listStyle}
-                                key={marker.name}
+                                key={marker.id}
                             >
                                 <div className="box">
                                     <article className="media">
@@ -28,10 +26,7 @@ class ListShelters extends Component {
                                                     <br />
                                                     <small>Phone: {marker.phone}</small>
                                                     <br />
-                                                    <small className="is-size-7">
-                                                        Email: {/* Check if email is there and length > 1 */}
-                                                        {marker.email}
-                                                    </small>
+                                                    <small className="is-size-7">{marker.email}</small>
                                                 </p>
                                             </div>
                                         </div>

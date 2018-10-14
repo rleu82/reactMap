@@ -6,7 +6,7 @@ import ListShelters from './ListShelters';
 class SideBar extends Component {
     render() {
         return (
-            <Menu>
+            <Menu isOpen={true} noOverlay>
                 <div className="media-left">
                     <figure className="image is-64x64">
                         <img

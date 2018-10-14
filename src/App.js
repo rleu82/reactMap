@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import fetchJsonp from 'fetch-jsonp';
-import Container from './Container';
+import MapContainer from './MapContainer';
 import './css/App.css';
 import './css/bulma.css';
 
@@ -8,12 +8,12 @@ class App extends Component {
     state = {
         shelters: [],
         mapMarkers: [],
-        searchZip: 91740,
+        defaultSearchZip: 91740,
         defaultCenter: { lat: 34.106676, lng: -117.806726 }
     };
 
     componentDidMount() {
-        this.updateZip(this.state.searchZip);
+        this.updateZip(this.state.defaultSearchZip);
     }
 
     // API call to grab shelter info from api.petfinder.com
@@ -34,7 +34,7 @@ class App extends Component {
             this.updateMapMarkers();
         });
     };
-
+    // store
     updateMapMarkers = () => {
         const newMapMarkers = this.state.shelters.map(shelter => {
             return {
@@ -48,14 +48,12 @@ class App extends Component {
             };
         });
         this.setState({ mapMarkers: newMapMarkers });
-        console.log(this.state.shelters);
-        console.log(this.state.mapMarkers);
     };
 
     render() {
         return (
             <div className="App">
-                <Container
+                <MapContainer
                     mapMarkers={this.state.mapMarkers}
                     shelters={this.state.shelters}
                     defaultCenter={this.state.defaultCenter}
