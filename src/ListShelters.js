@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class ListShelters extends Component {
     render() {
-        const listStyle = { margin: '10px 0' };
+        const listStyle = { margin: '20px 0' };
         return (
             <div className="level-left">
                 <ul>
@@ -20,13 +21,24 @@ class ListShelters extends Component {
                                         <div className="media-content">
                                             <div className="content">
                                                 <p className="is-size-6">
-                                                    <strong>{marker.name}</strong>
+                                                    <FontAwesomeIcon icon="home" />
+                                                    <strong> {marker.name}</strong>
                                                     <br />
                                                     <small>Phone: {marker.phone}</small>
                                                     <br />
                                                     <small className="is-size-7">{marker.email}</small>
                                                 </p>
                                             </div>
+                                            <nav className="level is-mobile">
+                                                <div className="level-left">
+                                                    <a className="level-item" aria-label="show dogs">
+                                                        <FontAwesomeIcon icon="dog" />
+                                                    </a>
+                                                    <a className="level-item" aria-label="show cats">
+                                                        <FontAwesomeIcon icon="cat" />
+                                                    </a>
+                                                </div>
+                                            </nav>
                                         </div>
                                     </article>
                                 </div>

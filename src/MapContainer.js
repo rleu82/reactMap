@@ -58,6 +58,20 @@ class MapContainer extends Component {
     };
 
     render() {
+        // Calculate bound points
+        let points = this.props.shelters.map(mapMarker => {
+            return {
+                lat: parseFloat(mapMarker.latitude.$t),
+                lng: parseFloat(mapMarker.longitude.$t)
+            };
+        });
+
+        // Set the bounds
+        let bounds = new this.props.google.maps.LatLngBounds();
+        for (var i = 0; i < points.length; i++) {
+            bounds.extend(points[i]);
+        }
+
         return (
             <div className="gMapsContainer" role="application">
                 <SideBar
@@ -69,11 +83,12 @@ class MapContainer extends Component {
                 <Map
                     onClick={this.onMapClicked}
                     google={window.google}
-                    zoom={11}
+                    zoom={10}
                     initialCenter={{
                         lat: this.props.defaultCenter.lat,
                         lng: this.props.defaultCenter.lng
                     }}
+                    bounds={bounds}
                 >
                     {this.props.mapMarkers.map(shelterMarker => {
                         return (

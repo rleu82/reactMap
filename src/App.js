@@ -4,6 +4,19 @@ import MapContainer from './MapContainer';
 import './css/App.css';
 import './css/bulma.css';
 
+// Font Awesome icons
+/* import components */
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { faDog } from '@fortawesome/free-solid-svg-icons';
+import { faCat } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+/* Add Font Awesome icons into library to use within the App */
+library.add(faHome);
+library.add(faDog);
+library.add(faCat);
+library.add(faEnvelope);
+
 class App extends Component {
     state = {
         shelters: [],
