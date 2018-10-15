@@ -10,10 +10,8 @@ class ListShelters extends Component {
                         return (
                             <li
                                 tabIndex="0"
-                                onFocus={() => {
-                                    this.props.onListClicked(marker);
-                                }}
-                                onClick={() => curMarker => this.props.onListClicked(marker)}
+                                onKeyPress={() => this.props.onListClicked(marker)}
+                                onClick={() => this.props.onListClicked(marker)}
                                 style={listStyle}
                                 key={marker.id}
                             >

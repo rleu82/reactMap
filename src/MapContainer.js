@@ -41,9 +41,9 @@ class MapContainer extends Component {
 
     onListClicked = curMarker => {
         let markerMatches = [...document.querySelectorAll('area[title]')];
-        let foundMarker = markerMatches.find(markerMatch => markerMatch.title === curMarker.name);
+        let foundMarker = markerMatches.find(markerMatch => markerMatch.title === curMarker.id);
         console.log(foundMarker);
-        if (document.querySelectorAll('area[title]')) {
+        if (document.querySelectorAll('area[title]') !== null) {
             foundMarker.click();
         } else {
             console.log('Marker was not found');
@@ -81,7 +81,7 @@ class MapContainer extends Component {
                                 onClick={this.onMarkerClick}
                                 name={shelterMarker.name}
                                 key={shelterMarker.id}
-                                title={shelterMarker.title}
+                                title={shelterMarker.id}
                                 position={{
                                     lat: parseFloat(shelterMarker.position.lat),
                                     lng: parseFloat(shelterMarker.position.lng)
