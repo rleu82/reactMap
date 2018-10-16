@@ -14,6 +14,16 @@ class FindShelters extends Component {
                         <option value="92501">Riverside Area</option>
                     </select>
                 </div>
+                <div className="field">
+                    <div className="control">
+                        <input
+                            className="input is-info"
+                            type="text"
+                            placeholder="Enter Shelter Name"
+                            onChange={e => this.props.filterMarkers(e.target.value)}
+                        />
+                    </div>
+                </div>
             </div>
         );
     }

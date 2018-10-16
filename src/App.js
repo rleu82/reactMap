@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import fetchJsonp from 'fetch-jsonp';
 import MapContainer from './MapContainer';
 import './css/App.css';
+
 import './css/bulma.css';
 
-// Font Awesome icons
-/* import components */
+/* import Font Awesome components and icons */
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { faDog } from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +20,7 @@ library.add(faEnvelope);
 class App extends Component {
     state = {
         shelters: [],
-        mapMarkers: [],
+        markerObjects: [],
         defaultSearchZip: 91740,
         defaultCenter: { lat: 34.106676, lng: -117.806726 }
     };
@@ -28,6 +28,13 @@ class App extends Component {
     componentDidMount() {
         this.updateZip(this.state.defaultSearchZip);
     }
+
+    // Manage api call and chain destructuring of response
+    updateZip = zip => {
+        this.findShelters(zip).then(() => {
+            this.updateMapMarkers();
+        });
+    };
 
     // API call to grab shelter info from api.petfinder.com
     findShelters = zip => {
@@ -42,12 +49,7 @@ class App extends Component {
             .catch(err => console.log(err));
     };
 
-    updateZip = zip => {
-        this.findShelters(zip).then(() => {
-            this.updateMapMarkers();
-        });
-    };
-    // store
+    // Destructure response into easier to managed objects with conditions
     updateMapMarkers = () => {
         const newMapMarkers = this.state.shelters.map(shelter => {
             return {
@@ -60,14 +62,15 @@ class App extends Component {
                 position: { lat: parseFloat(shelter.latitude.$t), lng: parseFloat(shelter.longitude.$t) }
             };
         });
-        this.setState({ mapMarkers: newMapMarkers });
+        this.setState({ markerObjects: newMapMarkers });
     };
 
     render() {
+        if (!this.state.markerObjects.length) return null;
         return (
             <div className="App">
                 <MapContainer
-                    mapMarkers={this.state.mapMarkers}
+                    markerObjects={this.state.markerObjects}
                     shelters={this.state.shelters}
                     defaultCenter={this.state.defaultCenter}
                     updateZip={this.updateZip}

@@ -1,30 +1,27 @@
 import React, { Component } from 'react';
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 import SideBar from './SideBar';
+import { isNullOrUndefined } from 'util';
 
 class MapContainer extends Component {
     state = {
-        showInfoWindow: false,
-        clickedMarker: {},
-        selectedShelter: {},
-        currentLocation: ''
+        selectedPlace: {},
+        activeMarker: {},
+        prevMarker: {},
+        showingInfoWindow: true,
+        currentLocation: '',
+        mapMarkers: [],
+        filteredMarkers: []
     };
     componentDidMount() {}
 
     // Clicking on marker sets props and activates(true) info window for selected shelter
-    onMarkerClick = (props, marker, e) =>
+    onMarkerClick = marker =>
         this.setState({
-            selectedShelter: props,
-            clickedMarker: marker,
-            showInfoWindow: true
+            activeMarker: marker,
+            showingInfoWindow: true
         });
-    onMarkerClickList = (props, marker, e) => {
-        this.setState({
-            selectedShelter: props,
-            clickedMarker: marker,
-            showInfoWindow: true
-        });
-    };
+
     // Clicking out anywhere else on map turns info window off in state and sets clicked marker to null
     onMapClicked = props => {
         if (this.state.showInfoWindow) {
@@ -43,19 +40,56 @@ class MapContainer extends Component {
         let markerMatches = [...document.querySelectorAll('area[title]')];
         let foundMarker = markerMatches.find(markerMatch => markerMatch.title === curMarker.id);
         console.log(foundMarker);
-        if (document.querySelectorAll('area[title]') !== null) {
-            foundMarker.click();
-        } else {
+        if (foundMarker === isNullOrUndefined) {
             console.log('Marker was not found');
+        } else {
+            console.log('Marker was found');
+            foundMarker.click();
         }
     };
 
-    onMarkerUpdated = markerToUpdate => {
+    /* google-maps-react display markers by adding them using components. I could not figure out a way to store
+    // them to work with side bar list. Originally used the object array to create a component for each marker and
+    // displayed them on side bar, but they weren't able to link. I had to use querySelector to find <area> tag and 
+    // attached a .click() to trigger the click. 
+    //
+    // Thanks to 'tidyline' for the work around. Create the markers without using <Marker/> component by using the onReady
+    // attribute of google-maps-react.
+    // https://github.com/fullstackreact/google-maps-react/issues/198#issuecomment-419119690
+    */
+
+    createMarkers(mapProps, map) {
+        const { google } = mapProps;
+        const newMapMarkers = [];
+        const infowindow = new google.maps.InfoWindow();
+
+        // Loop through destructured array [markerObjects] created from api data
+        this.props.markerObjects.forEach(marker => {
+            const mapMarker = new google.maps.Marker({
+                map: map,
+                position: marker.position,
+                name: marker.name,
+                title: marker.title,
+                id: marker.id,
+                key: marker.id,
+                city: marker.city,
+                phone: marker.phone,
+                email: marker.email
+            });
+
+            // Add event listener to mapMarker
+            mapMarker.addListener('click', () => {
+                infowindow.open(map, mapMarker);
+            });
+
+            newMapMarkers.push(mapMarker);
+        }, this);
+
         this.setState({
-            clickedMarker: markerToUpdate,
-            showInfoWindow: true
+            mapMarkers: newMapMarkers
         });
-    };
+        console.log(this.state.mapMarkers);
+    }
 
     render() {
         // Calculate bound points
@@ -78,9 +112,10 @@ class MapContainer extends Component {
                     shelters={this.props.shelters}
                     updateZip={this.props.updateZip}
                     onListClicked={this.onListClicked}
-                    mapMarkers={this.props.mapMarkers}
+                    mapMarkers={this.state.mapMarkers}
                 />
                 <Map
+                    onReady={this.createMarkers.bind(this)}
                     onClick={this.onMapClicked}
                     google={window.google}
                     zoom={10}
@@ -90,7 +125,7 @@ class MapContainer extends Component {
                     }}
                     bounds={bounds}
                 >
-                    {this.props.mapMarkers.map(shelterMarker => {
+                    {/*this.props.mapMarkers.map(shelterMarker => {
                         return (
                             <Marker
                                 onClick={this.onMarkerClick}
@@ -103,10 +138,10 @@ class MapContainer extends Component {
                                 }}
                             />
                         );
-                    })}
-                    <InfoWindow marker={this.state.clickedMarker} visible={this.state.showInfoWindow}>
+                    })*/}
+                    <InfoWindow marker={this.state.activeMarker} visible={this.state.showInfoWindow}>
                         <div>
-                            <h1>{this.state.selectedShelter.name}</h1>
+                            <h1>{this.state.selectedPlace.name}</h1>
                         </div>
                     </InfoWindow>
                 </Map>

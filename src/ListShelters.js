@@ -12,7 +12,7 @@ class ListShelters extends Component {
                             <li
                                 tabIndex="0"
                                 onKeyPress={() => this.props.onListClicked(marker)}
-                                onClick={() => this.props.onListClicked(marker)}
+                                onClick={() => marker.click()}
                                 style={listStyle}
                                 key={marker.id}
                             >
@@ -23,22 +23,8 @@ class ListShelters extends Component {
                                                 <p className="is-size-6">
                                                     <FontAwesomeIcon icon="home" />
                                                     <strong> {marker.name}</strong>
-                                                    <br />
-                                                    <small>Phone: {marker.phone}</small>
-                                                    <br />
-                                                    <small className="is-size-7">{marker.email}</small>
                                                 </p>
                                             </div>
-                                            <nav className="level is-mobile">
-                                                <div className="level-left">
-                                                    <a className="level-item" aria-label="show dogs">
-                                                        <FontAwesomeIcon icon="dog" />
-                                                    </a>
-                                                    <a className="level-item" aria-label="show cats">
-                                                        <FontAwesomeIcon icon="cat" />
-                                                    </a>
-                                                </div>
-                                            </nav>
                                         </div>
                                     </article>
                                 </div>
