@@ -12,6 +12,7 @@ class ListShelters extends Component {
                             <li
                                 tabIndex="0"
                                 onKeyPress={() => this.props.onListClicked(mapMarker)}
+                                // Use mapMarker.id instead of title to avoid conflicts. Each shelter is assigned unique ID from already.
                                 onClick={() => this.props.onListClicked(mapMarker.id)}
                                 style={listStyle}
                                 key={mapMarker.id}
