@@ -5,47 +5,24 @@ import { isNullOrUndefined } from 'util';
 
 class MapContainer extends Component {
     state = {
-        selectedPlace: {},
-        activeMarker: {},
-        prevMarker: {},
-        showingInfoWindow: true,
         currentLocation: '',
+        filteredMarkers: [],
         mapMarkers: [],
-        filteredMarkers: []
+        showingInfoWindow: false,
+        activeMarker: {},
+        selectedPlace: {}
     };
     componentDidMount() {}
-
-    // Clicking on marker sets props and activates(true) info window for selected shelter
-    onMarkerClick = marker =>
-        this.setState({
-            activeMarker: marker,
-            showingInfoWindow: true
-        });
-
-    // Clicking out anywhere else on map turns info window off in state and sets clicked marker to null
-    onMapClicked = props => {
-        if (this.state.showInfoWindow) {
-            this.setState({
-                showInfoWindow: false,
-                clickedMarker: null
-            });
-        }
-    };
 
     recenter() {
         this.map.panTo(this.props.defaultCenter);
     }
 
-    onListClicked = curMarker => {
-        let markerMatches = [...document.querySelectorAll('area[title]')];
-        let foundMarker = markerMatches.find(markerMatch => markerMatch.title === curMarker.id);
-        console.log(foundMarker);
-        if (foundMarker === isNullOrUndefined) {
-            console.log('Marker was not found');
-        } else {
-            console.log('Marker was found');
-            foundMarker.click();
-        }
+    // Filter through array of markers to find mapMarkerId match
+    onListClicked = clickedMarker => {
+        console.log(clickedMarker);
+        const matchedMarker = this.state.mapMarkers.find(mapMarker => mapMarker.id == clickedMarker);
+        window.google.maps.event.trigger(matchedMarker, 'click');
     };
 
     /* google-maps-react display markers by adding them using components. I could not figure out a way to store
@@ -57,20 +34,20 @@ class MapContainer extends Component {
     // attribute of google-maps-react.
     // https://github.com/fullstackreact/google-maps-react/issues/198#issuecomment-419119690
     */
-
     createMarkers(mapProps, map) {
         const { google } = mapProps;
-        const newMapMarkers = [];
+        const newMapMarkersArray = [];
         const infowindow = new google.maps.InfoWindow();
 
         // Loop through destructured array [markerObjects] created from api data
         this.props.markerObjects.forEach(marker => {
-            const mapMarker = new google.maps.Marker({
+            const newMapMarker = new google.maps.Marker({
                 map: map,
                 position: marker.position,
                 name: marker.name,
                 title: marker.title,
                 id: marker.id,
+                wOpen: false,
                 key: marker.id,
                 city: marker.city,
                 phone: marker.phone,
@@ -78,17 +55,14 @@ class MapContainer extends Component {
             });
 
             // Add event listener to mapMarker
-            mapMarker.addListener('click', () => {
-                infowindow.open(map, mapMarker);
+            newMapMarker.addListener('click', () => {
+                infowindow.open(map, newMapMarker);
             });
 
-            newMapMarkers.push(mapMarker);
+            newMapMarkersArray.push(newMapMarker);
         }, this);
-
-        this.setState({
-            mapMarkers: newMapMarkers
-        });
-        console.log(this.state.mapMarkers);
+        console.log(newMapMarkersArray);
+        this.setState({ mapMarkers: newMapMarkersArray });
     }
 
     render() {
@@ -124,27 +98,7 @@ class MapContainer extends Component {
                         lng: this.props.defaultCenter.lng
                     }}
                     bounds={bounds}
-                >
-                    {/*this.props.mapMarkers.map(shelterMarker => {
-                        return (
-                            <Marker
-                                onClick={this.onMarkerClick}
-                                name={shelterMarker.name}
-                                key={shelterMarker.id}
-                                title={shelterMarker.id}
-                                position={{
-                                    lat: parseFloat(shelterMarker.position.lat),
-                                    lng: parseFloat(shelterMarker.position.lng)
-                                }}
-                            />
-                        );
-                    })*/}
-                    <InfoWindow marker={this.state.activeMarker} visible={this.state.showInfoWindow}>
-                        <div>
-                            <h1>{this.state.selectedPlace.name}</h1>
-                        </div>
-                    </InfoWindow>
-                </Map>
+                />
             </div>
         );
     }

@@ -20,7 +20,7 @@ class FindShelters extends Component {
                             className="input is-info"
                             type="text"
                             placeholder="Enter Shelter Name"
-                            onChange={e => this.props.filterMarkers(e.target.value)}
+                            //onChange={e => this.props.filterMarkers(e.target.value)}
                         />
                     </div>
                 </div>

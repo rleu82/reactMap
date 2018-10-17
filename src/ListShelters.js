@@ -7,14 +7,14 @@ class ListShelters extends Component {
         return (
             <div className="level-left">
                 <ul>
-                    {this.props.mapMarkers.map(marker => {
+                    {this.props.mapMarkers.map(mapMarker => {
                         return (
                             <li
                                 tabIndex="0"
-                                onKeyPress={() => this.props.onListClicked(marker)}
-                                onClick={() => marker.click()}
+                                onKeyPress={() => this.props.onListClicked(mapMarker)}
+                                onClick={() => this.props.onListClicked(mapMarker.id)}
                                 style={listStyle}
-                                key={marker.id}
+                                key={mapMarker.id}
                             >
                                 <div className="box">
                                     <article className="media">
@@ -22,7 +22,7 @@ class ListShelters extends Component {
                                             <div className="content">
                                                 <p className="is-size-6">
                                                     <FontAwesomeIcon icon="home" />
-                                                    <strong> {marker.name}</strong>
+                                                    <strong> {mapMarker.name}</strong>
                                                 </p>
                                             </div>
                                         </div>

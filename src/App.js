@@ -21,6 +21,7 @@ class App extends Component {
     state = {
         shelters: [],
         markerObjects: [],
+        mapMarkers: [],
         defaultSearchZip: 91740,
         defaultCenter: { lat: 34.106676, lng: -117.806726 }
     };
@@ -65,13 +66,19 @@ class App extends Component {
         this.setState({ markerObjects: newMapMarkers });
     };
 
+    storeMarkers = markers => {
+        this.setState({ mapMarkers: markers });
+    };
+
     render() {
         if (!this.state.markerObjects.length) return null;
         return (
             <div className="App">
                 <MapContainer
-                    markerObjects={this.state.markerObjects}
                     shelters={this.state.shelters}
+                    markerObjects={this.state.markerObjects}
+                    mapMarkers={this.state.mapMarkers}
+                    storeMarkers={this.storeMarkers}
                     defaultCenter={this.state.defaultCenter}
                     updateZip={this.updateZip}
                     findShelters={this.findShelters}
