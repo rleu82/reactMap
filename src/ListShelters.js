@@ -3,11 +3,14 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class ListShelters extends Component {
     render() {
-        const listStyle = { margin: '20px 0' };
+        const listStyle = {
+            margin: '20px 0',
+            width: '100%'
+        };
         return (
             <div className="level-left">
-                <ul>
-                    {this.props.mapMarkers.map(mapMarker => {
+                <ul style={listStyle}>
+                    {this.props.filteredMarkers.map(mapMarker => {
                         return (
                             <li
                                 tabIndex="0"
@@ -21,7 +24,7 @@ class ListShelters extends Component {
                                     <article className="media">
                                         <div className="media-content">
                                             <div className="content">
-                                                <p className="is-size-6">
+                                                <p className="is-size-6-desktop is-size-6-tablet is-size-7-mobile">
                                                     <FontAwesomeIcon icon="home" />
                                                     <strong> {mapMarker.name}</strong>
                                                 </p>

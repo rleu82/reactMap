@@ -1,27 +1,40 @@
 import React, { Component } from 'react';
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { Map, GoogleApiWrapper } from 'google-maps-react';
 import SideBar from './SideBar';
-import { isNullOrUndefined } from 'util';
+import escapeRegExp from 'escape-string-regexp';
 
 class MapContainer extends Component {
-    state = {
-        currentLocation: '',
-        filteredMarkers: [],
-        mapMarkers: [],
-        showingInfoWindow: false,
-        activeMarker: {},
-        selectedPlace: {}
-    };
-    componentDidMount() {}
-
-    recenter() {
-        this.map.panTo(this.props.defaultCenter);
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentLocation: '',
+            filteredMarkers: [],
+            mapMarkers: []
+        };
+        // This binding is necessary to make `this` work in the callback
+        this.filterQuery = this.filterQuery.bind(this);
     }
 
-    // Filter through array of markers to find mapMarkerId match
+    // Filter the results
+    filterQuery(queryInputValue) {
+        // Check if the user entered a value
+        if (queryInputValue.length > 0) {
+            // Use Regular expression to do a search of marker names and output matched markers. 'i' = case insensitive
+            const regStringToEscape = escapeRegExp(queryInputValue);
+            const stringToTest = new RegExp(regStringToEscape, 'i');
+            // Set filteredMarkers array to equal results of filter. This triggers rerendering of list of shelters.
+            const queryMarkers = this.state.mapMarkers.filter(marker => stringToTest.test(marker.title));
+            this.setState({ filteredMarkers: queryMarkers });
+            console.log(this.state.filteredMarkers);
+        } else {
+            this.setState({ filteredMarkers: this.state.mapMarkers });
+        }
+    }
+
+    // Find Marker that matches the list item and trigger a click
     onListClicked = clickedMarker => {
         console.log(clickedMarker);
-        const matchedMarker = this.state.mapMarkers.find(mapMarker => mapMarker.id == clickedMarker);
+        const matchedMarker = this.state.mapMarkers.find(mapMarker => mapMarker.id === clickedMarker);
         window.google.maps.event.trigger(matchedMarker, 'click');
     };
 
@@ -47,7 +60,6 @@ class MapContainer extends Component {
                 name: marker.name,
                 title: marker.title,
                 id: marker.id,
-                wOpen: false,
                 key: marker.id,
                 city: marker.city,
                 phone: marker.phone,
@@ -58,11 +70,12 @@ class MapContainer extends Component {
             newMapMarker.addListener('click', () => {
                 infowindow.open(map, newMapMarker);
             });
-
+            // Add marker array
             newMapMarkersArray.push(newMapMarker);
         }, this);
-        console.log(newMapMarkersArray);
+        // Update state to the array that was generated in forEach loop
         this.setState({ mapMarkers: newMapMarkersArray });
+        this.setState({ filteredMarkers: newMapMarkersArray });
     }
 
     render() {
@@ -76,23 +89,23 @@ class MapContainer extends Component {
 
         // Set the bounds
         let bounds = new this.props.google.maps.LatLngBounds();
-        for (var i = 0; i < points.length; i++) {
-            bounds.extend(points[i]);
-        }
+        points.forEach(point => {
+            bounds.extend(point);
+        });
 
         return (
             <div className="gMapsContainer" role="application">
                 <SideBar
-                    shelters={this.props.shelters}
                     updateZip={this.props.updateZip}
                     onListClicked={this.onListClicked}
-                    mapMarkers={this.state.mapMarkers}
+                    filteredMarkers={this.state.filteredMarkers}
+                    filterQuery={this.filterQuery}
                 />
                 <Map
                     onReady={this.createMarkers.bind(this)}
                     onClick={this.onMapClicked}
                     google={window.google}
-                    zoom={10}
+                    zoom={15}
                     initialCenter={{
                         lat: this.props.defaultCenter.lat,
                         lng: this.props.defaultCenter.lng

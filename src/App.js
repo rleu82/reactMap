@@ -22,25 +22,24 @@ class App extends Component {
         shelters: [],
         markerObjects: [],
         mapMarkers: [],
-        defaultSearchZip: 91740,
+        defaultLocation: 'LosAngeles,CA',
         defaultCenter: { lat: 34.106676, lng: -117.806726 }
     };
 
     componentDidMount() {
         this.updateZip(this.state.defaultSearchZip);
     }
-
     // Manage api call and chain destructuring of response
-    updateZip = zip => {
-        this.findShelters(zip).then(() => {
+    updateZip = () => {
+        this.findShelters(this.state.defaultLocation).then(() => {
             this.updateMapMarkers();
         });
     };
 
     // API call to grab shelter info from api.petfinder.com
-    findShelters = zip => {
+    findShelters = location => {
         return fetchJsonp(
-            `http://api.petfinder.com/shelter.find?format=json&key=0486cb8d84957db4db8abbb194319fdf&count=25&location=${zip}&callback=callback`,
+            `http://api.petfinder.com/shelter.find?format=json&key=0486cb8d84957db4db8abbb194319fdf&count=100&location=${location}&callback=callback`,
             { jsonpCallbackFunction: 'callback' }
         )
             .then(res => res.json())
@@ -66,10 +65,6 @@ class App extends Component {
         this.setState({ markerObjects: newMapMarkers });
     };
 
-    storeMarkers = markers => {
-        this.setState({ mapMarkers: markers });
-    };
-
     render() {
         if (!this.state.markerObjects.length) return null;
         return (
@@ -78,7 +73,6 @@ class App extends Component {
                     shelters={this.state.shelters}
                     markerObjects={this.state.markerObjects}
                     mapMarkers={this.state.mapMarkers}
-                    storeMarkers={this.storeMarkers}
                     defaultCenter={this.state.defaultCenter}
                     updateZip={this.updateZip}
                     findShelters={this.findShelters}
