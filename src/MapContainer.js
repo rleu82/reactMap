@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Map, GoogleApiWrapper } from 'google-maps-react';
+import { Map, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
 import SideBar from './SideBar';
 import escapeRegExp from 'escape-string-regexp';
 
@@ -9,7 +9,8 @@ class MapContainer extends Component {
         this.state = {
             currentLocation: '',
             filteredMarkers: [],
-            mapMarkers: []
+            mapMarkers: [],
+            selectedMarker: {}
         };
 
         // This binding is necessary to make `this` work in the callback
@@ -62,8 +63,8 @@ class MapContainer extends Component {
     createMarkers(mapProps, map) {
         const { google } = mapProps;
         const newMapMarkersArray = [];
-        const infowindow = new google.maps.InfoWindow();
 
+        const infowindow = new google.maps.InfoWindow();
         // Loop through destructured array [markerObjects] created from api data
         this.props.markerObjects.forEach(marker => {
             const newMapMarker = new google.maps.Marker({
@@ -78,8 +79,30 @@ class MapContainer extends Component {
                 email: marker.email
             });
 
+            const contentString = `<div class="card">
+                <header class="card-header">
+                  <p class="card-header-title">
+                    ${marker.name}
+                  </p>
+                </header>
+                <div class="card-content">
+                  <div class="content">
+                    City: ${marker.city}<br />
+                    Phone: ${marker.phone}<br />
+                    Email: ${marker.email}
+                  </div>
+                </div>
+                <footer class="card-footer">
+                  <a href="#" class="card-footer-item">View Dogs</a>
+                  <a href="#" class="card-footer-item">View Cas</a>
+                </footer>
+              </div>`;
+
             // Add event listener to mapMarker
             newMapMarker.addListener('click', () => {
+                map.setCenter(newMapMarker.getPosition());
+                infowindow.close();
+                infowindow.setContent(contentString);
                 infowindow.open(map, newMapMarker);
             });
             // Add marker array
@@ -104,7 +127,7 @@ class MapContainer extends Component {
         });
 
         return (
-            <div className="gMapsContainer" role="application">
+            <main role="main" aria-label="map" role="application">
                 <SideBar
                     updateZip={this.props.updateZip}
                     onListClicked={this.onListClicked}
@@ -122,7 +145,7 @@ class MapContainer extends Component {
                     }}
                     bounds={bounds}
                 />
-            </div>
+            </main>
         );
     }
 }

@@ -4,11 +4,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class ListShelters extends Component {
     render() {
         const listStyle = {
-            margin: '20px 0',
+            margin: '10px 0',
+            padding: '0',
             width: '100%'
         };
+        const shelterList = {
+            overflowY: 'auto',
+            height: '60vh',
+            marginTop: '10px'
+        };
         return (
-            <div className="level-left">
+            <div className="level-left" style={shelterList}>
                 <ul style={listStyle}>
                     {this.props.filteredMarkers.map(mapMarker => {
                         return (
