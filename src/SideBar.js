@@ -16,7 +16,7 @@ class SideBar extends Component {
                     </figure>
                 </div>
                 <h2 className="title is-4 has-text-white">Los Angeles Area Shelters</h2>
-                <FindShelters updateZip={this.props.updateZip} filterQuery={this.props.filterQuery} />
+                <FindShelters updateZip={this.props.updateZip} searchQuery={this.props.searchQuery} />
                 <ListShelters filteredMarkers={this.props.filteredMarkers} onListClicked={this.props.onListClicked} />
             </Menu>
         );

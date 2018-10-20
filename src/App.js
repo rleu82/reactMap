@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import fetchJsonp from 'fetch-jsonp';
 import MapContainer from './MapContainer';
 import './css/App.css';
-
 import './css/bulma.css';
 
 /* import Font Awesome components and icons */
@@ -49,7 +48,7 @@ class App extends Component {
             .catch(err => console.log(err));
     };
 
-    // Destructure response into easier to managed objects with conditions
+    // Destructure response into easier to managed objects with conditions to check for email and phone
     updateMapMarkers = () => {
         const newMapMarkers = this.state.shelters.map(shelter => {
             return {

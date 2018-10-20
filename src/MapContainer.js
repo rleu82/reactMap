@@ -11,23 +11,35 @@ class MapContainer extends Component {
             filteredMarkers: [],
             mapMarkers: []
         };
+
         // This binding is necessary to make `this` work in the callback
-        this.filterQuery = this.filterQuery.bind(this);
+        this.searchQuery = this.searchQuery.bind(this);
     }
 
-    // Filter the results
-    filterQuery(queryInputValue) {
+    // Filter the results into filteredMarkers array
+    searchQuery(queryInputValue) {
         // Check if the user entered a value
         if (queryInputValue.length > 0) {
+            // Hide all markers as user types
+            this.state.mapMarkers.forEach(marker => marker.setVisible(false));
+
             // Use Regular expression to do a search of marker names and output matched markers. 'i' = case insensitive
             const regStringToEscape = escapeRegExp(queryInputValue);
             const stringToTest = new RegExp(regStringToEscape, 'i');
+
             // Set filteredMarkers array to equal results of filter. This triggers rerendering of list of shelters.
             const queryMarkers = this.state.mapMarkers.filter(marker => stringToTest.test(marker.title));
+
+            // Set the markers that match the query to be visible
+            queryMarkers.forEach(marker => marker.setVisible(true));
+
+            // Store the queryResults into state
             this.setState({ filteredMarkers: queryMarkers });
-            console.log(this.state.filteredMarkers);
         } else {
+            // If length of queryInput is 0 reset the array of markers and show all markers
             this.setState({ filteredMarkers: this.state.mapMarkers });
+            this.state.filteredMarkers.forEach(marker => marker.setVisible(true));
+            this.state.mapMarkers.forEach(marker => marker.setVisible(true));
         }
     }
 
@@ -56,7 +68,7 @@ class MapContainer extends Component {
         this.props.markerObjects.forEach(marker => {
             const newMapMarker = new google.maps.Marker({
                 map: map,
-                position: marker.position,
+                position: { lat: marker.position.lat, lng: marker.position.lng },
                 name: marker.name,
                 title: marker.title,
                 id: marker.id,
@@ -76,15 +88,13 @@ class MapContainer extends Component {
         // Update state to the array that was generated in forEach loop
         this.setState({ mapMarkers: newMapMarkersArray });
         this.setState({ filteredMarkers: newMapMarkersArray });
+        console.log(this.state.mapMarkers);
     }
 
     render() {
         // Calculate bound points
-        let points = this.props.shelters.map(mapMarker => {
-            return {
-                lat: parseFloat(mapMarker.latitude.$t),
-                lng: parseFloat(mapMarker.longitude.$t)
-            };
+        let points = this.state.mapMarkers.map(mapMarker => {
+            return mapMarker.position;
         });
 
         // Set the bounds
@@ -99,7 +109,7 @@ class MapContainer extends Component {
                     updateZip={this.props.updateZip}
                     onListClicked={this.onListClicked}
                     filteredMarkers={this.state.filteredMarkers}
-                    filterQuery={this.filterQuery}
+                    searchQuery={this.searchQuery}
                 />
                 <Map
                     onReady={this.createMarkers.bind(this)}
