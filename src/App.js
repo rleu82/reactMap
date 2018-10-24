@@ -23,7 +23,9 @@ class App extends Component {
         markerObjects: [],
         mapMarkers: [],
         defaultLocation: 'LosAngeles,CA',
-        defaultCenter: { lat: 34.106676, lng: -117.806726 }
+        defaultCenter: { lat: 34.106676, lng: -117.806726 },
+        apiError: false,
+        errorValue: ''
     };
 
     componentDidMount() {
@@ -46,7 +48,9 @@ class App extends Component {
             .then(data => {
                 this.setState({ shelters: data.petfinder.shelters.shelter });
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                this.setState({ apiError: true, errorValue: err });
+            });
     };
 
     // Destructure response into easier to managed objects with conditions to check for email and phone

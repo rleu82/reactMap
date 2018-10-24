@@ -6,7 +6,9 @@ const sideDrawer = props => {
     return (
         <nav className="side_drawer">
             <div className="filter-input">
-                <h2 className="title is-size-5 has-text-grey-darker">FIND BY NAME:</h2>
+                <h2 className="title is-size-5-desktop is-size-6-tablet is-size-7-mobile has-text-grey-darker">
+                    FIND BY NAME:
+                </h2>
                 <FindShelters updateZip={props.updateZip} searchQuery={props.searchQuery} />
                 <span>Showing {props.filteredMarkers.length} results</span>
             </div>

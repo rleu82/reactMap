@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Map, GoogleApiWrapper } from 'google-maps-react';
 import escapeRegExp from 'escape-string-regexp';
-import HeaderContainer from './Components/Header';
 import SideBar from './Components/SideBar';
 import SideDrawer from './Components/SideDrawer';
 
