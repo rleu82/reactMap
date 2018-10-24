@@ -79,7 +79,7 @@ body,
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: lightgray;
 }
 
 /* Handle */
@@ -146,12 +146,14 @@ div.card:focus {
 /* side drawer */
 .side_drawer {
     left: 0;
+    padding: 15px 15px;
     max-width: 380px;
-    height: calc(100% -52px);
+    height: 100%;
     position: fixed;
     top: 52px;
     background: whitesmoke;
     z-index: 200;
+    box-shadow: 2px 0 4px lightslategrey;
 }
 .toggle-drawer {
     display: flex;
@@ -165,11 +167,11 @@ div.card:focus {
     box-sizing: border-box;
     border: 0;
 }
-.toggle-drawer:focus {
-    outline: none;
-}
 .hamburger-line {
     width: 32px;
     height: 5px;
     background: black;
+}
+.filter-input {
+    margin-bottom: 20px;
 }

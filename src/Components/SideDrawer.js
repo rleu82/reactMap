@@ -8,6 +8,7 @@ const sideDrawer = props => {
             <div className="filter-input">
                 <h2 className="title is-size-5 has-text-grey-darker">FIND BY NAME:</h2>
                 <FindShelters updateZip={props.updateZip} searchQuery={props.searchQuery} />
+                <span>Showing {props.filteredMarkers.length} results</span>
             </div>
             <ListShelters filteredMarkers={props.filteredMarkers} onListClicked={props.onListClicked} />
         </nav>

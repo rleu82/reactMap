@@ -18,7 +18,7 @@ class ListShelters extends Component {
             background: 'white'
         };
         const shelterList = {
-            height: '60vh',
+            height: '73vh',
             width: '350px'
         };
         return (
