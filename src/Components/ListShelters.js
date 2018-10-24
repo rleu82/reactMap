@@ -2,20 +2,28 @@ import React, { Component } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class ListShelters extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            listItemColor: 'white',
+            listTextColor: 'darkgrey'
+        };
+    }
+
     render() {
         const listStyle = {
-            margin: '10px 0',
-            padding: '0',
-            width: '100%'
+            width: '100%',
+            height: '100%',
+            overflowY: 'scroll',
+            background: 'white'
         };
         const shelterList = {
-            overflowY: 'auto',
             height: '60vh',
-            marginTop: '10px'
+            width: '350px'
         };
         return (
             <div className="level-left" style={shelterList}>
-                <ul style={listStyle}>
+                <ul style={listStyle} aria-label="List of Shelters">
                     {this.props.filteredMarkers.map(mapMarker => {
                         return (
                             <li
@@ -23,21 +31,13 @@ class ListShelters extends Component {
                                 onKeyPress={() => this.props.onListClicked(mapMarker)}
                                 // Use mapMarker.id instead of title to avoid conflicts. Each shelter is assigned unique ID from already.
                                 onClick={() => this.props.onListClicked(mapMarker.id)}
-                                style={listStyle}
                                 key={mapMarker.id}
+                                role="button"
+                                aria-label={mapMarker.name}
                             >
-                                <div className="box">
-                                    <article className="media">
-                                        <div className="media-content">
-                                            <div className="content">
-                                                <p className="is-size-6-desktop is-size-6-tablet is-size-7-mobile">
-                                                    <FontAwesomeIcon icon="home" />
-                                                    <strong> {mapMarker.name}</strong>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </article>
-                                </div>
+                                <p className="card-header-title is-size-6-desktop is-size-6-tablet is-size-7-mobile">
+                                    {mapMarker.name}
+                                </p>
                             </li>
                         );
                     })}

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Map, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
-import SideBar from './SideBar';
+import { Map, GoogleApiWrapper } from 'google-maps-react';
 import escapeRegExp from 'escape-string-regexp';
+import HeaderContainer from './Components/Header';
+import SideBar from './Components/SideBar';
+import SideDrawer from './Components/SideDrawer';
 
 class MapContainer extends Component {
     constructor(props) {
@@ -81,21 +83,18 @@ class MapContainer extends Component {
 
             const contentString = `<div class="card">
                 <header class="card-header">
-                  <p class="card-header-title">
+                  <p class="card-header-title is-size-6">
                     ${marker.name}
                   </p>
                 </header>
                 <div class="card-content">
-                  <div class="content">
+                  <div class="content is-size-6">
                     City: ${marker.city}<br />
                     Phone: ${marker.phone}<br />
                     Email: ${marker.email}
                   </div>
                 </div>
-                <footer class="card-footer">
-                  <a href="#" class="card-footer-item">View Dogs</a>
-                  <a href="#" class="card-footer-item">View Cas</a>
-                </footer>
+               
               </div>`;
 
             // Add event listener to mapMarker
@@ -105,6 +104,10 @@ class MapContainer extends Component {
                 infowindow.setContent(contentString);
                 infowindow.open(map, newMapMarker);
             });
+            map.addListener('click', function() {
+                infowindow.close();
+            });
+
             // Add marker array
             newMapMarkersArray.push(newMapMarker);
         }, this);
@@ -126,15 +129,28 @@ class MapContainer extends Component {
             bounds.extend(point);
         });
 
+        const mapStyle = {
+            width: '100%',
+            height: 'calc(100% - 52px)',
+            top: '52px'
+        };
         return (
-            <main role="main" aria-label="map" role="application">
-                <SideBar
+            <main style={mapStyle} role="main" aria-label="map">
+                {/*<HeaderContainer
+                    updateZip={this.props.updateZip}
+                    onListClicked={this.onListClicked}
+                    filteredMarkers={this.state.filteredMarkers}
+                    searchQuery={this.searchQuery}
+                />*/}
+                <SideBar />
+                <SideDrawer
                     updateZip={this.props.updateZip}
                     onListClicked={this.onListClicked}
                     filteredMarkers={this.state.filteredMarkers}
                     searchQuery={this.searchQuery}
                 />
                 <Map
+                    role="application"
                     onReady={this.createMarkers.bind(this)}
                     onClick={this.onMapClicked}
                     google={window.google}
@@ -144,11 +160,13 @@ class MapContainer extends Component {
                         lng: this.props.defaultCenter.lng
                     }}
                     bounds={bounds}
+                    style={mapStyle}
                 />
             </main>
         );
     }
 }
+
 export default GoogleApiWrapper({
     apiKey: 'AIzaSyB6aDkp2IyLQVhLJuiOq0lxyrJAaNyhqkA'
 })(MapContainer);

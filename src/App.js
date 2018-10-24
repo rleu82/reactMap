@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import fetchJsonp from 'fetch-jsonp';
 import MapContainer from './MapContainer';
-import './css/App.css';
+
 import './css/bulma.css';
+import './css/App.css';
 
 /* import Font Awesome components and icons */
 import { library } from '@fortawesome/fontawesome-svg-core';
