@@ -11,7 +11,8 @@ class MapContainer extends Component {
             currentLocation: '',
             filteredMarkers: [],
             mapMarkers: [],
-            selectedMarker: {}
+            selectedMarker: {},
+            drawerOpen: false
         };
 
         // This binding is necessary to make `this` work in the callback
@@ -116,6 +117,13 @@ class MapContainer extends Component {
         console.log(this.state.mapMarkers);
     }
 
+    // Handle Toggle of Drawer
+    drawerToggleHandler = () => {
+        this.setState(prevState => {
+            return { drawerOpen: !prevState.drawerOpen };
+        });
+    };
+
     render() {
         // Calculate bound points
         let points = this.state.mapMarkers.map(mapMarker => {
@@ -133,21 +141,23 @@ class MapContainer extends Component {
             height: 'calc(100% - 52px)',
             top: '52px'
         };
-        return (
-            <main style={mapStyle} role="main" aria-label="map">
-                {/*<HeaderContainer
-                    updateZip={this.props.updateZip}
-                    onListClicked={this.onListClicked}
-                    filteredMarkers={this.state.filteredMarkers}
-                    searchQuery={this.searchQuery}
-                />*/}
-                <SideBar />
+
+        let haveDrawer;
+        if (this.state.drawerOpen) {
+            haveDrawer = (
                 <SideDrawer
                     updateZip={this.props.updateZip}
                     onListClicked={this.onListClicked}
                     filteredMarkers={this.state.filteredMarkers}
                     searchQuery={this.searchQuery}
                 />
+            );
+        }
+
+        return (
+            <main style={mapStyle} role="main" aria-label="map">
+                <SideBar drawerToggleHandler={this.drawerToggleHandler} />
+                {haveDrawer}
                 <Map
                     role="application"
                     onReady={this.createMarkers.bind(this)}
