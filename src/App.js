@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import fetchJsonp from 'fetch-jsonp';
 import MapContainer from './MapContainer';
-
+/* CSS */
 import './css/bulma.css';
 import './css/App.css';
+/* FontAwesome */
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faBars, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+library.add(faBars);
+library.add(faChevronLeft);
 
 class App extends Component {
     state = {

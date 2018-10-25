@@ -4,15 +4,23 @@ import FindShelters from './FindShelters';
 
 const sideDrawer = props => {
     return (
-        <nav className="side_drawer">
+        <nav className="side-drawer">
             <div className="filter-input">
                 <h2 className="title is-size-5-desktop is-size-6-tablet is-size-7-mobile has-text-grey-darker">
                     FIND BY NAME:
                 </h2>
-                <FindShelters updateZip={props.updateZip} searchQuery={props.searchQuery} />
+                <FindShelters
+                    updateZip={props.updateZip}
+                    searchQuery={props.searchQuery}
+                    drawerOpen={props.drawerOpen}
+                />
                 <span>Showing {props.filteredMarkers.length} results</span>
             </div>
-            <ListShelters filteredMarkers={props.filteredMarkers} onListClicked={props.onListClicked} />
+            <ListShelters
+                filteredMarkers={props.filteredMarkers}
+                onListClicked={props.onListClicked}
+                drawerOpen={props.drawerOpen}
+            />
         </nav>
     );
 };

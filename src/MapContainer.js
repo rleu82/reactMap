@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Map, GoogleApiWrapper } from 'google-maps-react';
 import escapeRegExp from 'escape-string-regexp';
-import SideBar from './Components/SideBar';
+import TopNav from './Components/TopNav';
 import SideDrawer from './Components/SideDrawer';
 
 class MapContainer extends Component {
@@ -150,14 +150,18 @@ class MapContainer extends Component {
                     onListClicked={this.onListClicked}
                     filteredMarkers={this.state.filteredMarkers}
                     searchQuery={this.searchQuery}
+                    drawerOpen={this.state.drawerOpen}
                 />
             );
         }
 
         return (
             <main style={mapStyle} role="main" aria-label="map">
-                <SideBar drawerToggleHandler={this.drawerToggleHandler} />
-                {haveDrawer}
+                <TopNav drawerToggleHandler={this.drawerToggleHandler} drawerOpen={this.state.drawerOpen} />
+                {
+                    /* If drawer is in open state display drawer */
+                    haveDrawer
+                }
                 <Map
                     role="application"
                     onReady={this.createMarkers.bind(this)}

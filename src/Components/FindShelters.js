@@ -12,6 +12,8 @@ class FindShelters extends Component {
                         onChange={e => this.props.searchQuery(e.target.value)}
                         role="searchbox"
                         aria-label="Search shelter by name"
+                        // Remove tab order when drawer is closed
+                        tabIndex={this.props.drawerOpen ? '0' : '-1'}
                     />
                 </div>
             </div>

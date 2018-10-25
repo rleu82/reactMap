@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class ListShelters extends Component {
     constructor(props) {
         super(props);
@@ -27,7 +26,8 @@ class ListShelters extends Component {
                     {this.props.filteredMarkers.map(mapMarker => {
                         return (
                             <li
-                                tabIndex="0"
+                                // Change tabIndex to -1 to remove from tab order if drawer is closed.
+                                tabIndex={this.props.drawerOpen ? '0' : '-1'}
                                 onKeyPress={() => this.props.onListClicked(mapMarker)}
                                 // Use mapMarker.id instead of title to avoid conflicts. Each shelter is assigned unique ID from already.
                                 onClick={() => this.props.onListClicked(mapMarker.id)}
