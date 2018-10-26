@@ -13,11 +13,13 @@ class MapContainer extends Component {
             mapMarkers: [],
             selectedMarker: {},
             drawerOpen: false,
-            haveError: true
+            haveError: true,
+            filteredMarkerObjects: []
         };
 
         // This binding is necessary to make `this` work in the callback
         this.searchQuery = this.searchQuery.bind(this);
+        this.searchQueryWithMapError = this.searchQueryWithMapError.bind(this);
     }
 
     componentDidCatch() {
@@ -32,7 +34,9 @@ class MapContainer extends Component {
                 haveError: true
             });
         };
+        this.setState({ filteredMarkerObjects: this.props.markerObjects });
     }
+
     // Filter the results into filteredMarkers array
     searchQuery(queryInputValue) {
         // Check if the user entered a value
@@ -60,6 +64,25 @@ class MapContainer extends Component {
         }
     }
 
+    // Filter the results into filteredMarkerObjects
+    searchQueryWithMapError(queryInputValue) {
+        // Check if the user entered a value
+        if (queryInputValue.length > 0) {
+            // Use Regular expression to do a search of marker names and output matched markers. 'i' = case insensitive
+            const regStringToEscape = escapeRegExp(queryInputValue);
+            const stringToTest = new RegExp(regStringToEscape, 'i');
+
+            // Set filteredMarkerObjects array to equal results of filter. This triggers rerendering of list of shelters.
+            const queryMarkers = this.props.markerObjects.filter(marker => stringToTest.test(marker.title));
+
+            // Store the queryResults into state
+            this.setState({ filteredMarkerObjects: queryMarkers });
+        } else {
+            // If length of queryInput is 0 reset the array of markers and show all markers
+            this.setState({ filteredMarkerObjects: this.props.markerObjects });
+        }
+    }
+
     // Find Marker that matches the list item and trigger a click
     onListClicked = clickedMarker => {
         console.log(clickedMarker);
@@ -67,10 +90,10 @@ class MapContainer extends Component {
         window.google.maps.event.trigger(matchedMarker, 'click');
     };
 
-    /* google-maps-react display markers by adding them using components. I could not figure out a way to store
+    /* google-maps-react displays markers by adding them using components. I could not figure out a way to store
     // them to work with side bar list. Originally used the object array to create a component for each marker and
-    // displayed them on side bar, but they weren't able to link. I had to use querySelector to find <area> tag and 
-    // attached a .click() to trigger the click. 
+    // displayed them on side bar, but they weren't able to link to the map. I had to use querySelector to find <area> tag and 
+    // attached a .click() to trigger the click, but that wasn't sufficient.
     //
     // Thanks to 'tidyline' for the work around. Create the markers without using <Marker/> component by using the onReady
     // attribute of google-maps-react.
@@ -79,7 +102,6 @@ class MapContainer extends Component {
     createMarkers(mapProps, map) {
         const { google } = mapProps;
         const newMapMarkersArray = [];
-
         const infowindow = new google.maps.InfoWindow();
         // Loop through destructured array [markerObjects] created from api data
         this.props.markerObjects.forEach(marker => {
@@ -151,32 +173,39 @@ class MapContainer extends Component {
             bounds.extend(point);
         });
 
+        // CSS to adjust for the top nav bar
         const mapStyle = {
             width: '100%',
             height: 'calc(100% - 52px)',
             top: '52px'
         };
 
+        // Display drawer if toggled open
         let haveDrawer;
         if (this.state.drawerOpen) {
             haveDrawer = (
                 <SideDrawer
                     onListClicked={this.onListClicked}
                     filteredMarkers={this.state.filteredMarkers}
+                    markerObjects={this.props.markerObjects}
+                    filteredMarkerObjects={this.state.filteredMarkerObjects}
                     searchQuery={this.searchQuery}
+                    searchQueryWithMapError={this.searchQueryWithMapError}
                     drawerOpen={this.state.drawerOpen}
                     apiError={this.props.apiError}
+                    mapError={this.state.haveError}
                 />
             );
         }
 
-        /* Due to how Map Markers are loaded 'onReady' because of the work around. I had make scenarios that include:
-        // Scenario 1: Api failed(true) to retrieve but map is able to load. Don't create markers. Remove onReady
+        /* Due to how Map Markers are loaded 'onReady' because of the work around stated above, I made scenarios that include:
+        // Scenario 1: Api failed(true) to retrieve but map is able to load. Don't create markers. Remove onReady, but notice is display.
         // Scenario 2: Api no errors but map had errors. Load the list, but have notice instead of map. 
-        // Scenario 3: Both Api and Map works. Display both.
-        */
-
+        // Scenario 3: Both fail, have notice on side bar list and notice for map.
+        // Scenario 4: Both Api and Map works. Display both. */
         let mapComponent;
+        // If api had error and map does not have errors, load map to downtown LA.
+        // Api error message for side drawer is handle by SideDrawer component.
         if (this.props.apiError & !this.state.haveError) {
             mapComponent = (
                 <Map
@@ -188,10 +217,11 @@ class MapContainer extends Component {
                         lat: this.props.defaultCenter.lat,
                         lng: this.props.defaultCenter.lng
                     }}
-                    bounds={bounds}
                     style={mapStyle}
                 />
             );
+            // Api has no errors but map has errors display message instead of map.
+            // SideDrawer loads this.props.markerObjects list instead of filtered marker list.
         } else if (!this.props.apiError & this.state.haveError) {
             mapComponent = (
                 <div class="notification is-primary">
@@ -202,7 +232,19 @@ class MapContainer extends Component {
                     amet, consectetur adipiscing elit
                 </div>
             );
+            // If both api and map have error display message on both map and side drawer.
+        } else if (this.props.apiError & this.state.haveError) {
+            mapComponent = (
+                <div class="notification is-primary">
+                    <button class="delete" />
+                    Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.{' '}
+                    <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus
+                    ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Sit
+                    amet, consectetur adipiscing elit
+                </div>
+            );
         } else {
+            // If no errors load as normal
             mapComponent = (
                 <Map
                     role={'application'}
@@ -249,38 +291,3 @@ class MapContainer extends Component {
 export default GoogleApiWrapper({
     apiKey: 'AIzaSyB6aDkp2IyLQVhLJuiOq0lxyrJAaNyhqkA'
 })(MapContainer);
-
-/*let mapComponent;
-if (this.props.apiError && !this.state.haveError) {
-    mapComponent = (
-        <Map
-            role={'application'}
-            onClick={this.onMapClicked}
-            google={window.google}
-            zoom={15}
-            initialCenter={{
-                lat: this.props.defaultCenter.lat,
-                lng: this.props.defaultCenter.lng
-            }}
-            bounds={bounds}
-            style={mapStyle}
-        />
-    );
-} else if (!this.props.apiError && this.state.haveError) {
-    //
-} else {
-    <Map
-        role={'application'}
-        onReady={this.createMarkers.bind(this)}
-        onClick={this.onMapClicked}
-        google={window.google}
-        zoom={15}
-        initialCenter={{
-            lat: this.props.defaultCenter.lat,
-            lng: this.props.defaultCenter.lng
-        }}
-        bounds={bounds}
-        style={mapStyle}
-    />;
-}
-*/
