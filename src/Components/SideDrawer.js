@@ -1,6 +1,7 @@
 import React from 'react';
 import ListShelters from './ListShelters';
 import FindShelters from './FindShelters';
+import ApiHasError from './ApiHasError';
 
 const sideDrawer = props => {
     return (
@@ -9,18 +10,18 @@ const sideDrawer = props => {
                 <h2 className="title is-size-5-desktop is-size-6-tablet is-size-7-mobile has-text-grey-darker">
                     FIND BY NAME:
                 </h2>
-                <FindShelters
-                    updateZip={props.updateZip}
-                    searchQuery={props.searchQuery}
-                    drawerOpen={props.drawerOpen}
-                />
+                <FindShelters searchQuery={props.searchQuery} drawerOpen={props.drawerOpen} />
                 <span>Showing {props.filteredMarkers.length} results</span>
             </div>
-            <ListShelters
-                filteredMarkers={props.filteredMarkers}
-                onListClicked={props.onListClicked}
-                drawerOpen={props.drawerOpen}
-            />
+            {!props.apiError ? (
+                <ListShelters
+                    filteredMarkers={props.filteredMarkers}
+                    onListClicked={props.onListClicked}
+                    drawerOpen={props.drawerOpen}
+                />
+            ) : (
+                <ApiHasError />
+            )}
         </nav>
     );
 };

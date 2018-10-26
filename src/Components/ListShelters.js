@@ -16,12 +16,12 @@ class ListShelters extends Component {
             overflowY: 'scroll',
             background: 'white'
         };
-        const shelterList = {
+        const sidePanel = {
             height: '73vh',
             width: '350px'
         };
         return (
-            <div className="level-left" style={shelterList}>
+            <div className="level-left" style={sidePanel}>
                 <ul style={listStyle} aria-label="List of Shelters">
                     {this.props.filteredMarkers.map(mapMarker => {
                         return (

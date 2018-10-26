@@ -12,13 +12,27 @@ class MapContainer extends Component {
             filteredMarkers: [],
             mapMarkers: [],
             selectedMarker: {},
-            drawerOpen: false
+            drawerOpen: false,
+            haveError: true
         };
 
         // This binding is necessary to make `this` work in the callback
         this.searchQuery = this.searchQuery.bind(this);
     }
 
+    componentDidCatch() {
+        this.setState({ haveError: true });
+    }
+
+    componentDidMount() {
+        // https://developers.google.com/maps/documentation/javascript/events
+        // Check for google maps auth errors.
+        window.gm_authFailure = () => {
+            this.setState({
+                haveError: true
+            });
+        };
+    }
     // Filter the results into filteredMarkers array
     searchQuery(queryInputValue) {
         // Check if the user entered a value
@@ -104,6 +118,7 @@ class MapContainer extends Component {
                 infowindow.setContent(contentString);
                 infowindow.open(map, newMapMarker);
             });
+
             map.addListener('click', function() {
                 infowindow.close();
             });
@@ -146,24 +161,51 @@ class MapContainer extends Component {
         if (this.state.drawerOpen) {
             haveDrawer = (
                 <SideDrawer
-                    updateZip={this.props.updateZip}
                     onListClicked={this.onListClicked}
                     filteredMarkers={this.state.filteredMarkers}
                     searchQuery={this.searchQuery}
                     drawerOpen={this.state.drawerOpen}
+                    apiError={this.props.apiError}
                 />
             );
         }
 
-        return (
-            <main style={mapStyle} role="main" aria-label="map">
-                <TopNav drawerToggleHandler={this.drawerToggleHandler} drawerOpen={this.state.drawerOpen} />
-                {
-                    /* If drawer is in open state display drawer */
-                    haveDrawer
-                }
+        /* Due to how Map Markers are loaded 'onReady' because of the work around. I had make scenarios that include:
+        // Scenario 1: Api failed(true) to retrieve but map is able to load. Don't create markers. Remove onReady
+        // Scenario 2: Api no errors but map had errors. Load the list, but have notice instead of map. 
+        // Scenario 3: Both Api and Map works. Display both.
+        */
+
+        let mapComponent;
+        if (this.props.apiError & !this.state.haveError) {
+            mapComponent = (
                 <Map
-                    role="application"
+                    role={'application'}
+                    onClick={this.onMapClicked}
+                    google={window.google}
+                    zoom={15}
+                    initialCenter={{
+                        lat: this.props.defaultCenter.lat,
+                        lng: this.props.defaultCenter.lng
+                    }}
+                    bounds={bounds}
+                    style={mapStyle}
+                />
+            );
+        } else if (!this.props.apiError & this.state.haveError) {
+            mapComponent = (
+                <div class="notification is-primary">
+                    <button class="delete" />
+                    Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.{' '}
+                    <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus
+                    ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Sit
+                    amet, consectetur adipiscing elit
+                </div>
+            );
+        } else {
+            mapComponent = (
+                <Map
+                    role={'application'}
                     onReady={this.createMarkers.bind(this)}
                     onClick={this.onMapClicked}
                     google={window.google}
@@ -175,6 +217,30 @@ class MapContainer extends Component {
                     bounds={bounds}
                     style={mapStyle}
                 />
+            );
+        }
+
+        return (
+            <main style={mapStyle} role="main" aria-label="map">
+                <TopNav drawerToggleHandler={this.drawerToggleHandler} drawerOpen={this.state.drawerOpen} />
+                {
+                    /* If drawer is in open state display drawer */
+                    haveDrawer
+                }
+                {/*<Map
+                    role={'application'}
+                    onReady={this.createMarkers.bind(this)}
+                    onClick={this.onMapClicked}
+                    google={window.google}
+                    zoom={15}
+                    initialCenter={{
+                        lat: this.props.defaultCenter.lat,
+                        lng: this.props.defaultCenter.lng
+                    }}
+                    bounds={bounds}
+                    style={mapStyle}
+                />*/}
+                {mapComponent}
             </main>
         );
     }
@@ -183,3 +249,38 @@ class MapContainer extends Component {
 export default GoogleApiWrapper({
     apiKey: 'AIzaSyB6aDkp2IyLQVhLJuiOq0lxyrJAaNyhqkA'
 })(MapContainer);
+
+/*let mapComponent;
+if (this.props.apiError && !this.state.haveError) {
+    mapComponent = (
+        <Map
+            role={'application'}
+            onClick={this.onMapClicked}
+            google={window.google}
+            zoom={15}
+            initialCenter={{
+                lat: this.props.defaultCenter.lat,
+                lng: this.props.defaultCenter.lng
+            }}
+            bounds={bounds}
+            style={mapStyle}
+        />
+    );
+} else if (!this.props.apiError && this.state.haveError) {
+    //
+} else {
+    <Map
+        role={'application'}
+        onReady={this.createMarkers.bind(this)}
+        onClick={this.onMapClicked}
+        google={window.google}
+        zoom={15}
+        initialCenter={{
+            lat: this.props.defaultCenter.lat,
+            lng: this.props.defaultCenter.lng
+        }}
+        bounds={bounds}
+        style={mapStyle}
+    />;
+}
+*/
