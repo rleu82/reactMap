@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import SideInfo from './SideInfo';
 
 class ListShelters extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            city: '',
-            phone: '',
-            email: ''
+            listItemColor: 'white',
+            listTextColor: 'darkgrey'
         };
     }
 
@@ -16,16 +13,15 @@ class ListShelters extends Component {
         const listStyle = {
             width: '100%',
             height: '100%',
+            overflowY: 'scroll',
             background: 'white'
         };
         const sidePanel = {
-            height: '60vh',
-            width: '350px',
-            overflowY: 'scroll',
-            overflowX: 'hidden'
+            height: '73vh',
+            width: '350px'
         };
         return (
-            <div className="column" style={sidePanel}>
+            <div className="level-left" style={sidePanel}>
                 <ul style={listStyle} aria-label="List of Shelters">
                     {this.props.filteredMarkers.map(mapMarker => {
                         return (
@@ -34,15 +30,7 @@ class ListShelters extends Component {
                                 tabIndex={this.props.drawerOpen ? '0' : '-1'}
                                 onKeyPress={() => this.props.onListClicked(mapMarker)}
                                 // Use mapMarker.id instead of title to avoid conflicts. Each shelter is assigned unique ID from already.
-                                onClick={() => {
-                                    this.props.onListClicked(mapMarker.id);
-                                    this.setState({
-                                        name: mapMarker.name,
-                                        city: mapMarker.city,
-                                        phone: mapMarker.phone,
-                                        email: mapMarker.email
-                                    });
-                                }}
+                                onClick={() => this.props.onListClicked(mapMarker)}
                                 key={mapMarker.id}
                                 role="button"
                                 aria-label={mapMarker.name}
@@ -54,15 +42,6 @@ class ListShelters extends Component {
                         );
                     })}
                 </ul>
-
-                {this.props.mapError ? (
-                    <SideInfo
-                        name={this.state.name}
-                        city={this.state.city}
-                        phone={this.state.phone}
-                        email={this.state.email}
-                    />
-                ) : null}
             </div>
         );
     }

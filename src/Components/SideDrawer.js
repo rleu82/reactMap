@@ -44,7 +44,7 @@ const sideDrawer = props => {
                 </h2>
                 {handleSearch}
                 {resultsNum}
-                <div className="column">{handleList}</div>
+                {handleList}
             </div>
         </nav>
     );

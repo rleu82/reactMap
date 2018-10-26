@@ -14,7 +14,13 @@ class MapContainer extends Component {
             selectedMarker: {},
             drawerOpen: false,
             haveError: true,
-            filteredMarkerObjects: []
+            filteredMarkerObjects: [],
+
+            // Store info on Map Error to display
+            markerName: '',
+            markerCity: '',
+            markerPhone: '',
+            markerEmail: ''
         };
 
         // This binding is necessary to make `this` work in the callback
@@ -86,7 +92,7 @@ class MapContainer extends Component {
     // Find Marker that matches the list item and trigger a click
     onListClicked = clickedMarker => {
         console.log(clickedMarker);
-        const matchedMarker = this.state.mapMarkers.find(mapMarker => mapMarker.id === clickedMarker);
+        const matchedMarker = this.state.mapMarkers.find(mapMarker => mapMarker.id === clickedMarker.id);
         window.google.maps.event.trigger(matchedMarker, 'click');
     };
 
@@ -223,13 +229,27 @@ class MapContainer extends Component {
             // Api has no errors but map has errors display message instead of map.
             // SideDrawer loads this.props.markerObjects list instead of filtered marker list.
         } else if (!this.props.apiError & this.state.haveError) {
+            const centerBox = {
+                top: '40vh'
+            };
             mapComponent = (
-                <div class="notification is-primary">
-                    <button class="delete" />
-                    Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.{' '}
-                    <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus
-                    ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Sit
-                    amet, consectetur adipiscing elit
+                <div class="columns is-centered">
+                    <div class="column is-half">
+                        <div class="notification is-primary" style={centerBox}>
+                            <button class="delete" />
+                            Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.{' '}
+                            <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum
+                            rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum{' '}
+                            <a>felis venenatis</a> efficitur. Sit amet, consectetur adipiscing elit
+                        </div>
+                        <div class="notification is-primary" style={centerBox}>
+                            <button class="delete" />
+                            Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.{' '}
+                            <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum
+                            rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum{' '}
+                            <a>felis venenatis</a> efficitur. Sit amet, consectetur adipiscing elit
+                        </div>
+                    </div>
                 </div>
             );
             // If both api and map have error display message on both map and side drawer.
