@@ -146,9 +146,11 @@ class MapContainer extends Component {
                   </div>
                 </div>
               </div>`;
+
+            // function to clear all animation from markers
             function markerClearBounce(markerArray) {
                 markerArray.forEach(marker => {
-                    marker.setAnimation(null);
+                    marker.setAnimation(-1);
                 });
             }
 

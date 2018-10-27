@@ -7,6 +7,11 @@ const sideDrawer = props => {
     let handleList;
     let handleSearch;
     let resultsNum;
+    let petFinderAttr = (
+        <span>
+            Pet Shelter list provided by <a href="https://www.petfinder.com/developers/">PetFinder</a>
+        </span>
+    );
 
     if (props.apiError) {
         handleList = <ApiHasError />;
@@ -42,8 +47,10 @@ const sideDrawer = props => {
                     FIND BY NAME:
                 </h2>
                 {handleSearch}
+
                 {resultsNum}
                 {handleList}
+                {petFinderAttr}
             </div>
         </nav>
     );
