@@ -13,10 +13,12 @@ class MapContainer extends Component {
             mapMarkers: [],
             selectedMarker: {},
             drawerOpen: false,
-            haveError: true,
+            haveError: false,
             filteredMarkerObjects: [],
+            currentMarker: '',
 
             // Store info on Map Error to display
+            isSideInfo: false,
             markerName: '',
             markerCity: '',
             markerPhone: '',
@@ -88,11 +90,16 @@ class MapContainer extends Component {
             this.setState({ filteredMarkerObjects: this.props.markerObjects });
         }
     }
-
     // Find Marker that matches the list item and trigger a click
     onListClicked = clickedMarker => {
-        console.log(clickedMarker);
         const matchedMarker = this.state.mapMarkers.find(mapMarker => mapMarker.id === clickedMarker.id);
+        this.setState({
+            isSideInfo: true,
+            markerName: clickedMarker.name,
+            markerCity: clickedMarker.city,
+            markerPhone: clickedMarker.phone,
+            markerEmail: clickedMarker.email
+        });
         window.google.maps.event.trigger(matchedMarker, 'click');
     };
 
@@ -109,10 +116,12 @@ class MapContainer extends Component {
         const { google } = mapProps;
         const newMapMarkersArray = [];
         const infowindow = new google.maps.InfoWindow();
+
         // Loop through destructured array [markerObjects] created from api data
         this.props.markerObjects.forEach(marker => {
             const newMapMarker = new google.maps.Marker({
                 map: map,
+                animation: google.maps.Animation.DROP,
                 position: { lat: marker.position.lat, lng: marker.position.lng },
                 name: marker.name,
                 title: marker.title,
@@ -136,8 +145,12 @@ class MapContainer extends Component {
                     Email: ${marker.email}
                   </div>
                 </div>
-               
               </div>`;
+            function markerClearBounce(markerArray) {
+                markerArray.forEach(marker => {
+                    marker.setAnimation(null);
+                });
+            }
 
             // Add event listener to mapMarker
             newMapMarker.addListener('click', () => {
@@ -145,6 +158,8 @@ class MapContainer extends Component {
                 infowindow.close();
                 infowindow.setContent(contentString);
                 infowindow.open(map, newMapMarker);
+                markerClearBounce(this.state.mapMarkers);
+                newMapMarker.setAnimation(google.maps.Animation.BOUNCE);
             });
 
             map.addListener('click', function() {
@@ -210,6 +225,14 @@ class MapContainer extends Component {
         // Scenario 3: Both fail, have notice on side bar list and notice for map.
         // Scenario 4: Both Api and Map works. Display both. */
         let mapComponent;
+        let sideCardWindow;
+        const centerBox = {
+            top: '20vh'
+        };
+        const sideInfoCard = {
+            top: '20vh',
+            border: '1px solid lightgrey'
+        };
         // If api had error and map does not have errors, load map to downtown LA.
         // Api error message for side drawer is handle by SideDrawer component.
         if (this.props.apiError & !this.state.haveError) {
@@ -229,38 +252,48 @@ class MapContainer extends Component {
             // Api has no errors but map has errors display message instead of map.
             // SideDrawer loads this.props.markerObjects list instead of filtered marker list.
         } else if (!this.props.apiError & this.state.haveError) {
-            const centerBox = {
-                top: '40vh'
-            };
+            if (this.state.isSideInfo) {
+                sideCardWindow = (
+                    <div class="card" style={sideInfoCard}>
+                        <header class="card-header">
+                            <p class="card-header-title is-size-6">{this.state.markerName}</p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content is-size-6">
+                                City: {this.state.markerCity}
+                                <br />
+                                Phone: {this.state.markerPhone}
+                                <br />
+                                Email: {this.state.markerEmail}
+                            </div>
+                        </div>
+                    </div>
+                );
+            } else {
+                sideCardWindow = null;
+            }
             mapComponent = (
                 <div class="columns is-centered">
-                    <div class="column is-half">
-                        <div class="notification is-primary" style={centerBox}>
-                            <button class="delete" />
-                            Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.{' '}
-                            <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum
-                            rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum{' '}
-                            <a>felis venenatis</a> efficitur. Sit amet, consectetur adipiscing elit
+                    <div class="column is-one-third">
+                        <div class="notification is-warning" style={centerBox}>
+                            <strong>
+                                There was an error while initializing the map. In the mean time, shelter info can still
+                                be viewed below.
+                            </strong>
                         </div>
-                        <div class="notification is-primary" style={centerBox}>
-                            <button class="delete" />
-                            Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.{' '}
-                            <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum
-                            rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum{' '}
-                            <a>felis venenatis</a> efficitur. Sit amet, consectetur adipiscing elit
-                        </div>
+                        {sideCardWindow}
                     </div>
                 </div>
             );
             // If both api and map have error display message on both map and side drawer.
         } else if (this.props.apiError & this.state.haveError) {
             mapComponent = (
-                <div class="notification is-primary">
-                    <button class="delete" />
-                    Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.{' '}
-                    <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus
-                    ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Sit
-                    amet, consectetur adipiscing elit
+                <div class="columns is-centered">
+                    <div class="column is-one-third">
+                        <div class="notification is-warning" style={centerBox}>
+                            <strong> There was an error while initializing the map and retrieving shelter list.</strong>
+                        </div>
+                    </div>
                 </div>
             );
         } else {
@@ -289,19 +322,6 @@ class MapContainer extends Component {
                     /* If drawer is in open state display drawer */
                     haveDrawer
                 }
-                {/*<Map
-                    role={'application'}
-                    onReady={this.createMarkers.bind(this)}
-                    onClick={this.onMapClicked}
-                    google={window.google}
-                    zoom={15}
-                    initialCenter={{
-                        lat: this.props.defaultCenter.lat,
-                        lng: this.props.defaultCenter.lng
-                    }}
-                    bounds={bounds}
-                    style={mapStyle}
-                />*/}
                 {mapComponent}
             </main>
         );

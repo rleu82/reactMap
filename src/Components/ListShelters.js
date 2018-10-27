@@ -17,7 +17,7 @@ class ListShelters extends Component {
             background: 'white'
         };
         const sidePanel = {
-            height: '73vh',
+            height: '70vh',
             width: '350px'
         };
         return (
@@ -31,6 +31,7 @@ class ListShelters extends Component {
                                 onKeyPress={() => this.props.onListClicked(mapMarker)}
                                 // Use mapMarker.id instead of title to avoid conflicts. Each shelter is assigned unique ID from already.
                                 onClick={() => this.props.onListClicked(mapMarker)}
+                                onFocus={() => this.props.onListClicked(mapMarker)}
                                 key={mapMarker.id}
                                 role="button"
                                 aria-label={mapMarker.name}

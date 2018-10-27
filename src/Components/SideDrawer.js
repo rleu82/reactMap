@@ -2,7 +2,6 @@ import React from 'react';
 import ListShelters from './ListShelters';
 import FindShelters from './FindShelters';
 import ApiHasError from './ApiHasError';
-import SideInfo from './SideInfo';
 
 const sideDrawer = props => {
     let handleList;

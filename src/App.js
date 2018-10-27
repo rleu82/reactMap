@@ -18,7 +18,7 @@ class App extends Component {
             markerObjects: [],
             defaultLocation: 'LosAngeles,CA',
             defaultCenter: { lat: 34.0407, lng: -118.2468 },
-            isLoading: null,
+            isLoading: true,
             apiError: false,
             errorValue: ''
         };
@@ -30,7 +30,6 @@ class App extends Component {
 
     // API call to grab shelter info from api.petfinder.com and destructure response
     findShelters = location => {
-        this.setState({ isLoading: true });
         return fetchJsonp(
             `http://api.petfinder.com/shelter.find?format=json&key=0486cb8d84957db4db8abbb194319fdf&count=100&location=${location}&callback=callback`,
             { jsonpCallbackFunction: 'callback' }
@@ -38,6 +37,7 @@ class App extends Component {
             .then(res => res.json())
             .then(data => {
                 this.setState({ shelters: data.petfinder.shelters.shelter });
+                console.log(this.state.shelters);
             })
             .then(() => {
                 this.updateMapMarkers();
