@@ -14,7 +14,7 @@ class MapContainer extends Component {
             mapMarkers: [],
             selectedMarker: {},
             drawerOpen: false,
-            haveError: true,
+            haveError: false,
             filteredMarkerObjects: [],
             currentMarker: '',
 
