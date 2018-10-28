@@ -3,6 +3,7 @@ import { Map, GoogleApiWrapper } from 'google-maps-react';
 import escapeRegExp from 'escape-string-regexp';
 import TopNav from './Components/TopNav';
 import SideDrawer from './Components/SideDrawer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class MapContainer extends Component {
     constructor(props) {
@@ -90,6 +91,7 @@ class MapContainer extends Component {
             this.setState({ filteredMarkerObjects: this.props.markerObjects });
         }
     }
+
     // Find Marker that matches the list item and trigger a click
     onListClicked = clickedMarker => {
         const matchedMarker = this.state.mapMarkers.find(mapMarker => mapMarker.id === clickedMarker.id);
@@ -103,6 +105,17 @@ class MapContainer extends Component {
         window.google.maps.event.trigger(matchedMarker, 'click');
     };
 
+    // handles clearing markers when map is clicked
+    onMapClicked = () => {
+        this.markerClearBounce(this.state.mapMarkers);
+    };
+
+    // function to clear all animation from markers
+    markerClearBounce(markerArray) {
+        markerArray.forEach(marker => {
+            marker.setAnimation(-1);
+        });
+    }
     /* google-maps-react displays markers by adding them using components. I could not figure out a way to store
     // them to work with side bar list. Originally used the object array to create a component for each marker and
     // displayed them on side bar, but they weren't able to link to the map. I had to use querySelector to find <area> tag and 
@@ -256,17 +269,20 @@ class MapContainer extends Component {
         } else if (!this.props.apiError & this.state.haveError) {
             if (this.state.isSideInfo) {
                 sideCardWindow = (
-                    <div class="card" style={sideInfoCard}>
+                    <div class="card" style={sideInfoCard} role="complementary">
                         <header class="card-header">
                             <p class="card-header-title is-size-6">{this.state.markerName}</p>
                         </header>
                         <div class="card-content">
                             <div class="content is-size-6">
-                                City: {this.state.markerCity}
+                                <FontAwesomeIcon icon="city" size="small" aria-hidden="true" />
+                                <span>City: {this.state.markerCity}</span>
                                 <br />
-                                Phone: {this.state.markerPhone}
+                                <FontAwesomeIcon icon="phone" size="small" aria-hidden="true" />
+                                <span>Phone: {this.state.markerPhone}</span>
                                 <br />
-                                Email: {this.state.markerEmail}
+                                <FontAwesomeIcon icon="envelope" size="small" aria-hidden="true" />
+                                <span>Email: {this.state.markerEmail}</span>
                             </div>
                         </div>
                     </div>
@@ -275,13 +291,15 @@ class MapContainer extends Component {
                 sideCardWindow = null;
             }
             mapComponent = (
-                <div class="columns is-centered">
-                    <div class="column is-one-third">
-                        <div class="notification is-warning" style={centerBox}>
-                            <strong>
-                                There was an error while initializing the map. In the mean time, shelter info can still
-                                be viewed below.
-                            </strong>
+                <div className="columns is-centered">
+                    <div className="column is-one-third">
+                        <div className="notification is-warning" style={centerBox} role="alert">
+                            <p>
+                                <strong>
+                                    There was an error while initializing the map. In the mean time, shelter info can
+                                    still be viewed below.
+                                </strong>
+                            </p>
                         </div>
                         {sideCardWindow}
                     </div>
@@ -290,10 +308,14 @@ class MapContainer extends Component {
             // If both api and map have error display message on both map and side drawer.
         } else if (this.props.apiError & this.state.haveError) {
             mapComponent = (
-                <div class="columns is-centered">
-                    <div class="column is-one-third">
-                        <div class="notification is-warning" style={centerBox}>
-                            <strong> There was an error while initializing the map and retrieving shelter list.</strong>
+                <div className="columns is-centered">
+                    <div className="column is-one-third">
+                        <div className="notification is-warning" style={centerBox} role="alert">
+                            <p>
+                                <strong>
+                                    There was an error while initializing the map and retrieving shelter list.
+                                </strong>
+                            </p>
                         </div>
                     </div>
                 </div>

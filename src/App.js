@@ -6,9 +6,13 @@ import './css/bulma.css';
 import './css/App.css';
 /* FontAwesome */
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faBars, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faChevronLeft, faEnvelope, faPhone, faDog, faCity } from '@fortawesome/free-solid-svg-icons';
 library.add(faBars);
 library.add(faChevronLeft);
+library.add(faEnvelope);
+library.add(faPhone);
+library.add(faDog);
+library.add(faCity);
 
 class App extends Component {
     constructor(props) {

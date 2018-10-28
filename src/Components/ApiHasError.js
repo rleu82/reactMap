@@ -11,7 +11,7 @@ const apiHasError = props => {
     return (
         <div className="level-left" style={sidePanel}>
             <div class="notification is-warning" style={notificationBox}>
-                There was a problem retrieving the list of animal shelters.
+                <p>There was a problem retrieving the list of animal shelters.</p>
             </div>
         </div>
     );

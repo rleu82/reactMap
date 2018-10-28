@@ -7,7 +7,13 @@ const toggleDrawer = props => {
     if (props.drawerOpen) {
         openedDrawer = () => {
             return (
-                <button aria-label="Close Search Panel" className="toggle-drawer" onClick={props.drawerToggleHandler}>
+                <button
+                    aria-label="menu"
+                    aria-expanded="true"
+                    aria-label="Close Search Panel"
+                    className="toggle-drawer"
+                    onClick={props.drawerToggleHandler}
+                >
                     <FontAwesomeIcon icon="chevron-left" size="3x" />
                 </button>
             );
@@ -15,7 +21,13 @@ const toggleDrawer = props => {
     } else {
         openedDrawer = () => {
             return (
-                <button aria-label="Open Search Panel" className="toggle-drawer" onClick={props.drawerToggleHandler}>
+                <button
+                    aria-label="menu"
+                    aria-expanded="false"
+                    aria-label="Open Search Panel"
+                    className="toggle-drawer"
+                    onClick={props.drawerToggleHandler}
+                >
                     <FontAwesomeIcon icon="bars" size="3x" />
                 </button>
             );

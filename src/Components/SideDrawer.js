@@ -8,15 +8,21 @@ const sideDrawer = props => {
     let handleSearch;
     let resultsNum;
     let petFinderAttr = (
-        <span>
-            Pet Shelter list provided by <a href="https://www.petfinder.com/developers/">PetFinder</a>
-        </span>
+        <div className="info-label">
+            <span tabIndex="0">
+                Animal Shelters provided by <a href="https://www.petfinder.com/developers/">PetFinder</a>
+            </span>
+        </div>
     );
 
     if (props.apiError) {
         handleList = <ApiHasError />;
         handleSearch = <FindShelters searchQuery={props.searchQuery} drawerOpen={props.drawerOpen} />;
-        resultsNum = <span>Showing {props.filteredMarkers.length} results</span>;
+        resultsNum = (
+            <div className="info-label">
+                <span>Showing {props.filteredMarkers.length} results</span>
+            </div>
+        );
     } else if (!props.apiErorr & props.mapError) {
         handleList = (
             <ListShelters
@@ -27,7 +33,11 @@ const sideDrawer = props => {
             />
         );
         handleSearch = <FindShelters searchQuery={props.searchQueryWithMapError} drawerOpen={props.drawerOpen} />;
-        resultsNum = <span>Showing {props.filteredMarkerObjects.length} results</span>;
+        resultsNum = (
+            <div className="info-label">
+                <span>Showing {props.filteredMarkerObjects.length} results</span>
+            </div>
+        );
     } else {
         handleList = (
             <ListShelters
@@ -37,7 +47,11 @@ const sideDrawer = props => {
             />
         );
         handleSearch = <FindShelters searchQuery={props.searchQuery} drawerOpen={props.drawerOpen} />;
-        resultsNum = <span>Showing {props.filteredMarkers.length} results</span>;
+        resultsNum = (
+            <div className="info-label">
+                <span>Showing {props.filteredMarkers.length} results</span>
+            </div>
+        );
     }
 
     return (

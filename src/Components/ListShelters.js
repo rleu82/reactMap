@@ -22,19 +22,22 @@ class ListShelters extends Component {
         };
         return (
             <div className="level-left" style={sidePanel}>
-                <ul style={listStyle} aria-label="List of Shelters">
+                <ul style={listStyle} role="listbox" aria-label="List of Shelters">
                     {this.props.filteredMarkers.map(mapMarker => {
                         return (
                             <li
                                 // Change tabIndex to -1 to remove from tab order if drawer is closed.
                                 tabIndex={this.props.drawerOpen ? '0' : '-1'}
-                                onKeyPress={() => this.props.onListClicked(mapMarker)}
+                                onKeyPress={e => {
+                                    if (e.key === 'Enter') {
+                                        this.props.onListClicked(mapMarker);
+                                    }
+                                }}
                                 // Use mapMarker.id instead of title to avoid conflicts. Each shelter is assigned unique ID from already.
                                 onClick={() => this.props.onListClicked(mapMarker)}
-                                onFocus={() => this.props.onListClicked(mapMarker)}
                                 key={mapMarker.id}
                                 role="button"
-                                aria-label={mapMarker.name}
+                                aria-label="Shelter Name"
                             >
                                 <p className="card-header-title is-size-6-desktop is-size-6-tablet is-size-7-mobile">
                                     {mapMarker.name}

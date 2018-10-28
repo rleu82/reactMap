@@ -99,3 +99,7 @@ div.card:focus {
 .filter-input {
     margin-bottom: 20px;
 }
+.info-label {
+    margin: 10px 0;
+    text-align: center;
+}
