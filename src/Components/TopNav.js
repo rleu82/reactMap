@@ -9,7 +9,7 @@ class TopNav extends Component {
         };
         return (
             <header className="sidebar">
-                <nav className="sidebar-nav" role="navigation" aria-label="main navigation">
+                <nav className="sidebar-nav" aria-label="main navigation">
                     <div>
                         <ToggleDrawer
                             drawerToggleHandler={this.props.drawerToggleHandler}
@@ -18,7 +18,7 @@ class TopNav extends Component {
                     </div>
                     <div className="branding-title is-size-4-desktop is-size-5-tablet is-size-6-mobile">
                         <a href="./">
-                            <FontAwesomeIcon icon="dog" size="small" aria-hidden="true" />
+                            <FontAwesomeIcon icon="dog" size="sm" aria-hidden="true" />
                             <span style={addMargin}>
                                 <strong>ADOPT AND SAVE A PET</strong>
                             </span>

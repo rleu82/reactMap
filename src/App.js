@@ -41,7 +41,6 @@ class App extends Component {
             .then(res => res.json())
             .then(data => {
                 this.setState({ shelters: data.petfinder.shelters.shelter });
-                console.log(this.state.shelters);
             })
             .then(() => {
                 this.updateMapMarkers();

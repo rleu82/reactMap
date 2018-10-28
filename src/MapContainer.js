@@ -14,7 +14,7 @@ class MapContainer extends Component {
             mapMarkers: [],
             selectedMarker: {},
             drawerOpen: false,
-            haveError: false,
+            haveError: true,
             filteredMarkerObjects: [],
             currentMarker: '',
 
@@ -275,13 +275,13 @@ class MapContainer extends Component {
                         </header>
                         <div class="card-content">
                             <div class="content is-size-6">
-                                <FontAwesomeIcon icon="city" size="small" aria-hidden="true" />
+                                <FontAwesomeIcon icon="city" size="sm" aria-hidden="true" />
                                 <span>City: {this.state.markerCity}</span>
                                 <br />
-                                <FontAwesomeIcon icon="phone" size="small" aria-hidden="true" />
+                                <FontAwesomeIcon icon="phone" size="sm" aria-hidden="true" />
                                 <span>Phone: {this.state.markerPhone}</span>
                                 <br />
-                                <FontAwesomeIcon icon="envelope" size="small" aria-hidden="true" />
+                                <FontAwesomeIcon icon="envelope" size="sm" aria-hidden="true" />
                                 <span>Email: {this.state.markerEmail}</span>
                             </div>
                         </div>
@@ -291,13 +291,14 @@ class MapContainer extends Component {
                 sideCardWindow = null;
             }
             mapComponent = (
+                // Map error but API has no errors
                 <div className="columns is-centered">
                     <div className="column is-one-third">
                         <div className="notification is-warning" style={centerBox} role="alert">
                             <p>
                                 <strong>
                                     There was an error while initializing the map. In the mean time, shelter info can
-                                    still be viewed below.
+                                    still be viewed below when the side list is selected.
                                 </strong>
                             </p>
                         </div>

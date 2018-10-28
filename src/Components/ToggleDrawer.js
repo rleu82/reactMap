@@ -8,7 +8,6 @@ const toggleDrawer = props => {
         openedDrawer = () => {
             return (
                 <button
-                    aria-label="menu"
                     aria-expanded="true"
                     aria-label="Close Search Panel"
                     className="toggle-drawer"
@@ -22,7 +21,6 @@ const toggleDrawer = props => {
         openedDrawer = () => {
             return (
                 <button
-                    aria-label="menu"
                     aria-expanded="false"
                     aria-label="Open Search Panel"
                     className="toggle-drawer"
