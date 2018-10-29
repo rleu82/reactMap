@@ -20,3 +20,13 @@ This app was created for Project 7 of Udacity Front End Nanodegree program using
    IE: `http://api.petfinder.com/shelter.find?format=json&key=YourKeyHere&count=100&location=${location}&callback=callback`
 
 ## Dependencies
+
+[google-maps-react](https://github.com/fullstackreact/google-maps-react) is used to lazy load google maps into project.
+
+[escape-string-regexp](https://github.com/sindresorhus/escape-string-regexp)
+
+[fetch JSONP](https://github.com/camsong/fetch-jsonp)
+
+[Font Awesome](https://fontawesome.com/how-to-use/on-the-web/using-with/react)
+
+[Hero Patterns](http://www.heropatterns.com/) - "Hideout" background svg by Steve Schoger under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
