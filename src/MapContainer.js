@@ -188,7 +188,6 @@ class MapContainer extends Component {
         // Update state to the array that was generated in forEach loop
         this.setState({ mapMarkers: newMapMarkersArray });
         this.setState({ filteredMarkers: newMapMarkersArray });
-        console.log(this.state.mapMarkers);
     }
 
     // Handle Toggle of Drawer
