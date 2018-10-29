@@ -15,14 +15,16 @@ const sideDrawer = props => {
         </div>
     );
 
+    // API Error
     if (props.apiError) {
-        handleList = <ApiHasError />;
+        handleList = <ApiHasError errorValue={this.props.errorValue} />;
         handleSearch = <FindShelters searchQuery={props.searchQuery} drawerOpen={props.drawerOpen} />;
         resultsNum = (
             <div className="info-label">
                 <span>Showing {props.filteredMarkers.length} results</span>
             </div>
         );
+        // API Call is made but map erorr
     } else if (!props.apiErorr & props.mapError) {
         handleList = (
             <ListShelters
@@ -38,6 +40,7 @@ const sideDrawer = props => {
                 <span>Showing {props.filteredMarkerObjects.length} results</span>
             </div>
         );
+        // No errors
     } else {
         handleList = (
             <ListShelters

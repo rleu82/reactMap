@@ -1,4 +1,4 @@
-# Neighborhood Map : Adopt And Save A Pet
+# Neighborhood Map : Animal Shelters
 
 ## Overview
 
@@ -12,7 +12,7 @@ This app was created for Project 7 of Udacity Front End Nanodegree program using
 ## Installation and Development
 
 1. Download or clone this [repository](https://github.com/rleu82/reactMap)
-2. Navigate to the directory where this repo was clone or extracted
+2. Navigate to the directory where this repo was cloned or extracted
 3. Run `npm install` to install all dependencies.
 4. Run `npm start` to start the server at [localhost:3000](http://localhost:3000/)
 5. Navigate to [Google](https://cloud.google.com/maps-platform/) and create and account and generate an api key for Google Maps Javascript API. (Place your maps key on line 358 MapContainer.js after "apiKey:")
@@ -20,3 +20,13 @@ This app was created for Project 7 of Udacity Front End Nanodegree program using
    IE: `http://api.petfinder.com/shelter.find?format=json&key=YourKeyHere&count=100&location=${location}&callback=callback`
 
 ## Dependencies
+
+[google-maps-react](https://github.com/fullstackreact/google-maps-react) is used to lazy load google maps into project.
+
+[escape-string-regexp](https://github.com/sindresorhus/escape-string-regexp)
+
+[fetch JSONP](https://github.com/camsong/fetch-jsonp)
+
+[Font Awesome](https://fontawesome.com/how-to-use/on-the-web/using-with/react)
+
+[Hero Patterns](http://www.heropatterns.com/) - "Hideout" background svg by Steve Schoger under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)

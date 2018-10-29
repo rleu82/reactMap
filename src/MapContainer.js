@@ -13,7 +13,7 @@ class MapContainer extends Component {
             filteredMarkers: [],
             mapMarkers: [],
             selectedMarker: {},
-            drawerOpen: false,
+            drawerOpen: true,
             haveError: false,
             filteredMarkerObjects: [],
             currentMarker: '',
@@ -145,6 +145,7 @@ class MapContainer extends Component {
                 email: marker.email
             });
 
+            // Marker Content
             const contentString = `<div class="card">
                 <header class="card-header">
                   <p class="card-header-title is-size-6">
@@ -229,6 +230,7 @@ class MapContainer extends Component {
                     searchQueryWithMapError={this.searchQueryWithMapError}
                     drawerOpen={this.state.drawerOpen}
                     apiError={this.props.apiError}
+                    errorValue={this.props.errorValue}
                     mapError={this.state.haveError}
                 />
             );
