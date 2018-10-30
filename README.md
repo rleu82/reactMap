@@ -19,6 +19,12 @@ This app was created for Project 7 of Udacity Front End Nanodegree program using
 6. Goto [PetFinder](https://www.petfinder.com/developers/api-key) and create an account and grab your api key. PetFinder's api key is used within the fetch url after `...&key=` and before `&count`.
    IE: `http://api.petfinder.com/shelter.find?format=json&key=YourKeyHere&count=100&location=${location}&callback=callback`
 
+#### These steps are for production mode which is neccesary for the service worker to work
+
+7. Enter `npm run build` to create a build of the project
+8. Run `serve -s build` will serve the project. If serve isn't installed enter `npm install -g serve` before running `serve -s build`
+9. Navigate to [localhost:5000](http://localhost:5000/) as listed on your terminal. \*Please note the port is `5000` for production mode.
+
 ## Dependencies
 
 [google-maps-react](https://github.com/fullstackreact/google-maps-react) is used to lazy load google maps into project.
