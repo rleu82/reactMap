@@ -229,7 +229,6 @@ class MapContainer extends Component {
                     searchQueryWithMapError={this.searchQueryWithMapError}
                     drawerOpen={this.state.drawerOpen}
                     apiError={this.props.apiError}
-                    errorValue={this.props.errorValue}
                     mapError={this.state.haveError}
                 />
             );

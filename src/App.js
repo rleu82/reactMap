@@ -23,8 +23,7 @@ class App extends Component {
             defaultLocation: 'LosAngeles,CA',
             defaultCenter: { lat: 34.0407, lng: -118.2468 },
             isLoading: true,
-            apiError: false,
-            errorValue: ''
+            apiError: false
         };
     }
 
@@ -35,7 +34,7 @@ class App extends Component {
     // API call to grab shelter info from api.petfinder.com and destructure response
     findShelters = location => {
         return fetchJsonp(
-            `http://api.petfinder.com/shelter.find?format=json&key=0486cb8d84957db4db8abbb194319fdf&count=100&location=${location}&callback=callback`,
+            `http://api.petfinder.com/shelter.find?format=json&key=486cb8d84957db4db8abbb194319fdf&count=100&location=${location}&callback=callback`,
             { jsonpCallbackFunction: 'callback' }
         )
             .then(res => res.json())
@@ -47,7 +46,8 @@ class App extends Component {
                 this.setState({ isLoading: false });
             })
             .catch(err => {
-                this.setState({ apiError: true, errorValue: err, isLoading: false });
+                this.setState({ apiError: true, isLoading: false });
+                alert('Error loading data from Petfinder. Please try reloading the page. \n\n' + err);
                 console.log(err);
             });
     };

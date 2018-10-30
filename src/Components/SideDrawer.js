@@ -17,7 +17,7 @@ const sideDrawer = props => {
 
     // API Error
     if (props.apiError) {
-        handleList = <ApiHasError errorValue={this.props.errorValue} />;
+        handleList = <ApiHasError />;
         handleSearch = <FindShelters searchQuery={props.searchQuery} drawerOpen={props.drawerOpen} />;
         resultsNum = (
             <div className="info-label">
